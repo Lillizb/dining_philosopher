@@ -10,7 +10,7 @@
 //phil 5 800 300 200
 typedef struct s_fork
 {
-	int id;
+	int fork_id;
 	bool fork_ok;
 	pthread_t mutex;
 	struct s_table *table;
@@ -27,8 +27,8 @@ typedef struct s_philo
 	t_fork *second_fork;
 	bool full; 
 
-	struct s_table	*table;
-	t_fork  *fork;
+	struct	s_table	*table;
+	t_fork	*fork;
 
 	//pthread_mutex_t mutex;
 } t_philo;
@@ -39,6 +39,8 @@ typedef struct s_table
 	t_fork *fork;
 	int philo_sum;
 	int fork_sum;
+	int	meal_counter;
+	bool	end_simulation;
 } t_table;
 
 //MUTEX

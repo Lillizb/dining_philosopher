@@ -15,20 +15,27 @@ av[3] = time_to_eat
 av[4] = time_to_sleep
 */
 
-//int main(int ac, char **av)
-int main()
+int main(int ac, char **av)
 {
-	t_table table;
+	if (ac == 5 || ac == 6)
 
-	int philo_count = 5;
-	int fork_count = 5;
+	//1. parsing input
+	parse_input();
+	//2. data init
+	data_init(table);
+	//3. dining start
 
-	table.philo_sum = philo_count;
-	table.fork_sum = fork_count;
-	table.philo = malloc(philo_count * sizeof (t_philo));
-	table.fork = malloc(fork_count * sizeof (t_fork));
+	//4. no leaks
+}
+	// t_table table;
 
-	philo_init(&table);
+	// int philo_count = 5;
+	// int fork_count = 5;
+
+	// table.philo_sum = philo_count;
+	// table.fork_sum = fork_count;
+	
+
 	//assign_fork(&table);
 
 	// for(int i = 0; i < philo_count; i++)
@@ -128,3 +135,7 @@ int main()
 // 	pthread_mutex_destroy(&mutex);
 // 	return (0);
 // }
+
+pthread_create(&table->philo[i], NULL, &table->philo, NULL);
+pthread_join(table->philo[i], NULL)
+pthread_mutex_destroy(&table->philo[i]);

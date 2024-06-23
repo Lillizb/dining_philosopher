@@ -1,14 +1,19 @@
 #include "philo.h"
 
-
-void data_init(char **av)
+void data_init(t_table *table)
 {
-	table->phil_sum = ft_atol(av[1]);
-	table->fork_sum = table->phil_sum;
-	table->philo = malloc(table->phil_sum);
-	table->philo->id = 0; //?
-	table->phil->full = false;
-	//phil->mutex = 
+	int	i;
+
+	i = 0;
+	table->philo = malloc(sizeof(t_philo) * table->philo_sum);
+	table->fork = malloc(sizeof(t_fork) * table->fork_sum);
+	while (i < table->philo_sum)
+	{
+		mutex_handle(&table->fork[i], INIT);
+		table->fork[i].fork_id = i;
+		i++;
+	}
+	philo_init(table);
 }
 void philo_init(t_table *table)
 {
@@ -27,7 +32,7 @@ void philo_init(t_table *table)
 		i++;
 	}
 	assign_fork(philo, table->fork, i);
-} 
+}
 void assign_fork(t_philo *philo, t_fork *fork, int philo_id)
 {
 	// int i;
@@ -46,21 +51,22 @@ void assign_fork(t_philo *philo, t_fork *fork, int philo_id)
 
 //***** MUTEX SAFE ******//
 /*
-init 
-destroy 
+init
+destroy
 lock
 unlock
 */
 
-void mutex_handle(t_mtx *mutex, t_opcode opcode)
+void	mutex_handle(t_table *table, t_opcode opcode)
 {
 	if (opcode == LOCK)
-		pthread_mutex_lock(mutex);
+		pthread_mutex_lock(table);
 	else if (opcode == UNLOCK)
-		pthread_mutex_unlock(mutex);
+		pthread_mutex_unlock(table);
 	else if (opcode = INIT)
-		pthread_mutex_init(mutex, NULL);
+		pthread_mutex_init(table, NULL);
 	else if (opcode == DESTROY)
-		pthread_mutex_destroy(mutex, NULL);
+		pthread_mutex_destroy(table);
 }
 
+//void	thread_handle(t_table *table, t_opcode opcode)
