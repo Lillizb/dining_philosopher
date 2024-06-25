@@ -57,16 +57,32 @@ lock
 unlock
 */
 
-void	mutex_handle(t_table *table, t_opcode opcode)
-{
-	if (opcode == LOCK)
-		pthread_mutex_lock(table);
-	else if (opcode == UNLOCK)
-		pthread_mutex_unlock(table);
-	else if (opcode = INIT)
-		pthread_mutex_init(table, NULL);
-	else if (opcode == DESTROY)
-		pthread_mutex_destroy(table);
-}
+// void	mutex_handle(t_table *table, t_opcode opcode)
+// {
+// 	if (opcode == LOCK)
+// 		pthread_mutex_lock(table->philo->id);
+// 	else if (opcode == UNLOCK)
+// 		pthread_mutex_unlock(table->philo->id);
+// 	else if (opcode == INIT)
+// 		pthread_mutex_init(table->philo->id, NULL);
+// 	else if (opcode == DESTROY)
+// 		pthread_mutex_destroy(table->philo->id);
+// }
 
-//void	thread_handle(t_table *table, t_opcode opcode)
+// void	thread_handle(t_table *table, t_opcode opcode)
+// {
+// 	if (opcode == CREATE)
+// 		pthread_create(&table->philo->id, NULL, threadFunction, NULL);//threadFunction what is this?
+// 	if (opcode == JOIN)
+// 		pthread_join(table->philo->id, NULL);
+// 	if (opcode == DETACH)
+// 		pthread_detach(table->philo->id);
+// }
+
+// void* threadFunction(void* arg)
+// {
+// 	printf("philo is thiking\n");
+// 	usleep(200);
+// 	printf("philo sleeps");
+// 	return NULL;
+// }

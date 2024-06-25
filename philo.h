@@ -21,8 +21,8 @@ typedef struct s_fork
 
 typedef struct s_philo
 {
-	int id;
-	int meal_counter;
+	long id;
+	long meal_counter;
 	t_fork *first_fork;
 	t_fork *second_fork;
 	bool full; 
@@ -37,10 +37,13 @@ typedef struct s_table
 {
 	t_philo *philo;
 	t_fork *fork;
-	int philo_sum;
-	int fork_sum;
-	int	meal_counter;
+	long philo_sum;
+	long fork_sum;
 	bool	end_simulation;
+	long	time_to_die;
+	long	time_to_eat;
+	long	time_to_sleep;
+
 } t_table;
 
 //MUTEX
@@ -66,9 +69,14 @@ int main();
 
 
 /******** data init ********/
+void data_init(t_table *table);
 void assign_fork(t_philo *philo, t_fork *fork, int philo_id);
 void philo_init(t_table *table);
 
 
 /******* utils *********/
+void	input_valid_check(char *str);
+int is_digit(char *s);
+int is_space(char str);
+long ft_atol(char *str);
 void* my_malloc(size_t bytes);

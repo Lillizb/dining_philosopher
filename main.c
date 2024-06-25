@@ -17,12 +17,23 @@ av[4] = time_to_sleep
 
 int main(int ac, char **av)
 {
-	if (ac == 5 || ac == 6)
+	t_table *table;
 
+	if (ac != 5)
+	{
+		printf("");
+	}
+	if (ac == 5 || ac == 6)
+	{
+		parse_input(table, av);
+		data_init(table);
+		dining(table);
+
+	}
 	//1. parsing input
-	parse_input();
+	
 	//2. data init
-	data_init(table);
+	
 	//3. dining start
 
 	//4. no leaks
