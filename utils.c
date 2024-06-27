@@ -1,12 +1,10 @@
 #include "philo.h"
 //print error
 
-void	input_valid_check(char *str)
+int	input_valid_check(char *str)
 {
 	int len;
-	int i;
 
-	i = 0;
 	len = 0;
 	
 	if (is_digit(str) == 0)

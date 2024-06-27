@@ -17,26 +17,56 @@ void dining(t_table *table)
 	pthread_t *threads;
 
 	threads = malloc(table->philo_sum * sizeof(pthread_t));
+	if (threads == NULL)
+		exit(EXIT_FAILURE);
 	i = 0;
+	pthread_mutex_init(&table->mutex, NULL);
 	while (i <= table->philo_sum)
 	{
 		table->philo->id = i + 1;
-		pthread_create(&threads[i], NULL, threadFunction, NULL);
+		if (pthread_create(&threads[i], NULL, threadFunction, &table->philo[i]) != 0)
+			//TODO: free(threads); free(table->forks)? ; exit(EXIT_FAILURE);
 		i++;
 	}
 	i = 0;
 	while (i < table->philo_sum)
 	{
-		pthread_join(threads[i], NULL);
+		if (pthread_join(threads[i], NULL) != 0)
+			//TODO: free(threads); free(table->forks)? ; exit(EXIT_FAILURE);
 		i++;
 	}
+	pthread_mutex_destroy(&table->mutex);
+	free(threads);
 }
 void threadFunction(void *arg)
 {
 	t_philo *philo;
+	t_fork	*fork;
 
 	philo = (t_philo *)arg;
-	printf("philosopher %d is eating\n", philo->id);
+	printf("philosopher %ld is thinking\n", philo->id);
+	usleep(100);
 
-	return NULL;
+	pthread_mutex_lock(philo->first_fork);
+	printf("philosopher %ld is taking the first fork\n", philo->id, fork->fork_id);
+	pthread_mutex_lock(philo->second_fork);
+	printf("philosopher %ld is taking the second fork\n", philo->id, fork->fork_id);
+	
+	printf("philosopher %ld is eating\n", philo->id);
+	usleep(100);
+
+	pthread_mutex_unlock(&philo->first_fork);
+	pthread_mutex_unlock(&philo->second_fork);	
+	
+	printf("philosopher %ld is sleeping\n", philo->id);
+	usleep(100);
+
 }
+
+// int main(int ac, char **av)
+// {
+// 	if (ac == 2)
+// 	{
+		
+// 	}
+// }

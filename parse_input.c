@@ -8,7 +8,7 @@
 
 #include "philo.h"
 
-void parse_inout(t_table *table, char **av)
+void parse_input(t_table *table, char **av)
 {
 	input_valid_check(av[1]);
 	input_valid_check(av[2]);

@@ -23,8 +23,8 @@ typedef struct s_philo
 {
 	long id;
 	long meal_counter;
-	t_fork *first_fork;
-	t_fork *second_fork;
+	pthread_mutex_t *first_fork;
+	pthread_mutex_t *second_fork;
 	bool full; 
 
 	struct	s_table	*table;
@@ -39,6 +39,8 @@ typedef struct s_table
 	t_fork *fork;
 	long philo_sum;
 	long fork_sum;
+	pthread_mutex_t mutex;
+	pthread_mutex_t *forks;
 	bool	end_simulation;
 	long	time_to_die;
 	long	time_to_eat;
@@ -60,12 +62,11 @@ typedef enum e_opcode
 	
 
 /******** Prototype ***********/
-int main();
-
+int main(int ac, char **av);
 
 
 /****** parsing input ******/
-//void parse_inout(t_table *table, char **av);
+void parse_input(t_table *table, char **av);
 
 
 /******** data init ********/
@@ -73,9 +74,11 @@ void data_init(t_table *table);
 void assign_fork(t_philo *philo, t_fork *fork, int philo_id);
 void philo_init(t_table *table);
 
+/*********** dining ************/
+void dining(t_table *table);
 
 /******* utils *********/
-void	input_valid_check(char *str);
+int	input_valid_check(char *str);
 int is_digit(char *s);
 int is_space(char str);
 long ft_atol(char *str);

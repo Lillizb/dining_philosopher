@@ -9,7 +9,7 @@ void data_init(t_table *table)
 	table->fork = malloc(sizeof(t_fork) * table->fork_sum);
 	while (i < table->philo_sum)
 	{
-		mutex_handle(&table->fork[i], INIT);
+		pthread_mutex_init(&table->fork[i], NULL);
 		table->fork[i].fork_id = i;
 		i++;
 	}
@@ -25,7 +25,7 @@ void philo_init(t_table *table)
 	{
 		philo = &table->philo[i];
 		philo->id = i + 1;
-		printf("philo ID: %d\n", philo->id);
+		printf("philo ID: %ld\n", philo->id);
 		philo->full = false;
 		philo->meal_counter = 0;
 		philo->table = table;

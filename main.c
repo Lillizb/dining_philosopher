@@ -19,9 +19,10 @@ int main(int ac, char **av)
 {
 	t_table *table;
 
+	table = NULL;
 	if (ac != 5)
 	{
-		printf("");
+		printf("philosophers amount is not 5!\n");
 	}
 	if (ac == 5 || ac == 6)
 	{
@@ -60,9 +61,8 @@ int main(int ac, char **av)
 	// 		i, table.fork[i].id, table.fork[i].fork_ok);
 	// }
 
-	free(table.philo);
-	free(table.fork);
-}
+	// free(table.philo);
+	// free(table.fork);
 
 	
 
@@ -147,6 +147,6 @@ int main(int ac, char **av)
 // 	return (0);
 // }
 
-pthread_create(&table->philo[i], NULL, &table->philo, NULL);
-pthread_join(table->philo[i], NULL)
-pthread_mutex_destroy(&table->philo[i]);
+// pthread_create(&table->philo[i], NULL, &table->philo, NULL);
+// pthread_join(table->philo[i], NULL)
+// pthread_mutex_destroy(&table->philo[i]);
