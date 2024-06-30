@@ -1,3 +1,6 @@
+#ifndef	PHILO_H
+# define PHILO_H
+
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -5,33 +8,29 @@
 #include <sys/time.h> //get time of day
 #include <limits.h> //INT_MAX
 
-//fork
+#define RESET   "\033[0m" //reset to default color
+#define R    "\033[31m" //red
+#define G   "\033[32m" //green
+#define Y  "\033[33m"	 //yellow
+#define B    "\033[34m" //blue
 
-//phil 5 800 300 200
+
 typedef struct s_fork
 {
-	int fork_id;
-	bool fork_ok;
-	pthread_t mutex;
-	struct s_table *table;
-	//t_philo *philo;
-
-	//pthread_mutex_t mutex;
+	pthread_t fork_mutex;
 }	t_fork;
 
 typedef struct s_philo
 {
-	long id;
+	int id;
 	long meal_counter;
-	pthread_mutex_t *first_fork;
-	pthread_mutex_t *second_fork;
 	bool full; 
-
-	struct	s_table	*table;
+	t_fork *first_fork;
+	t_fork *second_fork;
+	t_table	*data;
 	t_fork	*fork;
-
-	//pthread_mutex_t mutex;
-} t_philo;
+	pthread_mutex_t philo_mutex;
+}	t_philo;
 
 typedef struct s_table
 {
@@ -39,8 +38,10 @@ typedef struct s_table
 	t_fork *fork;
 	long philo_sum;
 	long fork_sum;
-	pthread_mutex_t mutex;
+	long meal_num; //av[5]
+	pthread_mutex_t philo_mutex;
 	pthread_mutex_t *forks;
+	pthread_mutex_t table_mutex;
 	bool	end_simulation;
 	long	time_to_die;
 	long	time_to_eat;
@@ -70,7 +71,7 @@ void parse_input(t_table *table, char **av);
 
 
 /******** data init ********/
-void data_init(t_table *table);
+void data_init(t_table *table, int ac, char **av);
 void assign_fork(t_philo *philo, t_fork *fork, int philo_id);
 void philo_init(t_table *table);
 
@@ -83,3 +84,6 @@ int is_digit(char *s);
 int is_space(char str);
 long ft_atol(char *str);
 void* my_malloc(size_t bytes);
+
+
+#endif

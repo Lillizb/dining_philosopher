@@ -21,6 +21,7 @@ void dining(t_table *table)
 		exit(EXIT_FAILURE);
 	i = 0;
 	pthread_mutex_init(&table->mutex, NULL);
+
 	while (i <= table->philo_sum)
 	{
 		table->philo->id = i + 1;
@@ -43,22 +44,22 @@ void threadFunction(void *arg)
 	t_philo *philo;
 	t_fork	*fork;
 
-	philo = (t_philo *)arg;
-	printf("philosopher %ld is thinking\n", philo->id);
+	t_philo philo = (t_philo *)arg;
+	printf(THINKING "philosopher %d is thinking\n" RESET, philo->id);
 	usleep(100);
 
 	pthread_mutex_lock(philo->first_fork);
-	printf("philosopher %ld is taking the first fork\n", philo->id, fork->fork_id);
+	printf("philosopher %d is taking the first fork\n", philo->id, fork->fork_id);
 	pthread_mutex_lock(philo->second_fork);
-	printf("philosopher %ld is taking the second fork\n", philo->id, fork->fork_id);
+	printf("philosopher %d is taking the second fork\n", philo->id, fork->fork_id);
 	
-	printf("philosopher %ld is eating\n", philo->id);
+	printf(EATING "philosopher %d is eating\n" RESET, philo->id);
 	usleep(100);
 
 	pthread_mutex_unlock(&philo->first_fork);
 	pthread_mutex_unlock(&philo->second_fork);	
 	
-	printf("philosopher %ld is sleeping\n", philo->id);
+	printf("philosopher %d is sleeping\n", philo->id);
 	usleep(100);
 
 }

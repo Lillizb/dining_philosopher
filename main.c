@@ -39,6 +39,13 @@ int main(int ac, char **av)
 
 	//4. no leaks
 }
+
+void destroy_mutex_exit(t_table *table)
+{
+	
+}
+
+
 	// t_table table;
 
 	// int philo_count = 5;
