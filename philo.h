@@ -23,7 +23,7 @@ typedef struct s_fork
 typedef struct s_philo
 {
 	int id;
-	long meal_counter;
+
 	bool full; 
 	t_fork *first_fork;
 	t_fork *second_fork;
@@ -43,9 +43,13 @@ typedef struct s_table
 	pthread_mutex_t *forks;
 	pthread_mutex_t table_mutex;
 	bool	end_simulation;
+	long	meal_counter;
 	long	time_to_die;
 	long	time_to_eat;
 	long	time_to_sleep;
+	long	death_time;
+	long	start_time;
+
 
 } t_table;
 
