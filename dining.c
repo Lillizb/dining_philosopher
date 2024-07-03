@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   dining.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/03 10:54:13 by ygao              #+#    #+#             */
+/*   Updated: 2024/07/03 13:05:42 by ygao             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 //create all philos, all threads
 
@@ -44,9 +56,9 @@ void threadFunction(void *arg)
 	t_philo *philo;
 	t_fork	*fork;
 
-	t_philo philo = (t_philo *)arg;
-	printf(THINKING "philosopher %d is thinking\n" RESET, philo->id);
-	usleep(100);
+	// t_philo philo = (t_philo *)arg;
+	// printf(THINKING "philosopher %d is thinking\n" RESET, philo->id);
+	// usleep(100);
 
 	pthread_mutex_lock(philo->first_fork);
 	printf("philosopher %d is taking the first fork\n", philo->id, fork->fork_id);
@@ -64,12 +76,12 @@ void threadFunction(void *arg)
 
 }
 
-long get_time(void)
+long	get_time(void)
 {
-	struct timeval tv;
-	long start;
+	struct timeval	tv;
+	long			start;
 
-	if (gettimeofday(&tv,NULL) != 0)
+	if (gettimeofday(&tv, NULL) != 0)
 	{
 		printf("Time Of Day: Error!\n");
 		return (-1);
@@ -79,5 +91,9 @@ long get_time(void)
 }
 
 //eat 
-	table->start_time = get_time(void);
-	table->philo->death_time = table->start + table->time_to_die;
+void	dining(t_table *table)
+{
+	pthread_mutex_init(&table->philo
+	table->start_time = get_time();
+	table->philo->death_time = table->start_time + table->time_to_die;
+}

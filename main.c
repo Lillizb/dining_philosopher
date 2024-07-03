@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/03 10:54:07 by ygao              #+#    #+#             */
+/*   Updated: 2024/07/03 10:54:08 by ygao             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <pthread.h>
@@ -7,36 +19,22 @@
 #include <sys/time.h>
 #include "philo.h"
 
-//5 800 200 200
-/*
-av[1] = number_of_philosophers
-av[2] = time_to_die 
-av[3] = time_to_eat
-av[4] = time_to_sleep
-*/
-
-int main(int ac, char **av)
+int	main(int ac, char **av)
 {
-	t_table *table;
+	t_table	*table;
 
 	table = NULL;
-	if (ac != 5)
+	if (check_ac(ac) == 1)
 	{
-		printf("philosophers amount is not 5!\n");
+		printf("argument input not correct! \n");
+		return (-1);
 	}
 	if (ac == 5 || ac == 6)
 	{
 		parse_input(table, av);
-		data_init(table);
+		data_init(table, ac, av);
 		dining(table);
-
 	}
-	//1. parsing input
-	
-	//2. data init
-	
-	//3. dining start
-
 	//4. no leaks
 }
 
