@@ -64,10 +64,20 @@ void threadFunction(void *arg)
 
 }
 
-// int main(int ac, char **av)
-// {
-// 	if (ac == 2)
-// 	{
-		
-// 	}
-// }
+long get_time(void)
+{
+	struct timeval tv;
+	long start;
+
+	if (gettimeofday(&tv,NULL) != 0)
+	{
+		printf("Time Of Day: Error!\n");
+		return (-1);
+	}
+	start = tv.tv_sec * 1e3 + tv.tv_usec / 1e3;
+	return (start);
+}
+
+//eat 
+	table->start_time = get_time(void);
+	table->philo->death_time = table->start + table->time_to_die;
