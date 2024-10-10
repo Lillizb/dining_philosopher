@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:54:13 by ygao              #+#    #+#             */
-/*   Updated: 2024/07/03 13:05:42 by ygao             ###   ########.fr       */
+/*   Updated: 2024/10/10 17:07:02 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,18 @@
 
 //( if no meals, return ;
 //	if there is only one philo, TODO)
+void	finish_must_eat(t_table *table)
+{
+	t_philo	*philo;
+
+	if (table->must_eat != -1)
+	{
+		if (philo->meal_counter == table->must_eat)
+		{
+			//if they finished, what to do next? stop the process? how?
+		}
+	}
+}
 
 void dining(t_table *table)
 {

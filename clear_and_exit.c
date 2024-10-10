@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 13:00:38 by ygao              #+#    #+#             */
-/*   Updated: 2024/07/03 13:05:42 by ygao             ###   ########.fr       */
+/*   Updated: 2024/10/10 17:33:21 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ int	error_exit(char *error, t_table *table)
 	return (-1);
 }
 
-void ft__exit(t_table *table)
+void	ft__exit(t_table *table)
 {
-	
+	free(table);
+	exit(EXIT_FAILURE);
 }

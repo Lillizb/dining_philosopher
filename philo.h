@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:52:59 by ygao              #+#    #+#             */
-/*   Updated: 2024/07/03 14:40:52 by ygao             ###   ########.fr       */
+/*   Updated: 2024/10/10 17:38:45 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@
 
 typedef struct s_fork
 {
-	pthread_mutex_t		fork_mutex;
+	pthread_mutex_t		mutex;
 }	t_fork;
 
 typedef struct s_philo
@@ -44,7 +44,7 @@ typedef struct s_philo
 	t_fork			*first_fork;
 	t_fork			*second_fork;
 	long			meal_counter;
-	pthread_mutex_t	philo_mutex;
+	pthread_mutex_t	mutex;
 }	t_philo;
 
 typedef struct s_table
@@ -53,7 +53,7 @@ typedef struct s_table
 	t_fork			*fork;
 	long			philo_sum;
 	long			fork_sum;
-	pthread_mutex_t	table_mutex;
+	pthread_mutex_t	mutex;
 	pthread_mutex_t	write_mutex;
 	bool			end_simulation;
 	long			must_eat;

@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:54:07 by ygao              #+#    #+#             */
-/*   Updated: 2024/07/03 10:54:08 by ygao             ###   ########.fr       */
+/*   Updated: 2024/10/10 16:49:37 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,19 +23,15 @@ int	main(int ac, char **av)
 {
 	t_table	*table;
 
-	table = NULL;
-	if (check_ac(ac) == 1)
-	{
-		printf("argument input not correct! \n");
+	if (check_ac(ac) == -1)
 		return (-1);
-	}
 	if (ac == 5 || ac == 6)
 	{
 		parse_input(table, av);
 		data_init(table, ac, av);
 		dining(table);
 	}
-	//4. no leaks
+	//4. clean
 }
 
 void destroy_mutex_exit(t_table *table)
