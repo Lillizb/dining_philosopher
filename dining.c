@@ -6,106 +6,106 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:54:13 by ygao              #+#    #+#             */
-/*   Updated: 2024/10/10 17:07:02 by ygao             ###   ########.fr       */
+/*   Updated: 2024/10/11 18:15:08 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-//create all philos, all threads
 
-//create a monitor thread  --> what is this?
-
-//sycronize the beginning of the simulation
-	// pthread_create -> philo start running
-	//	every philo starts simutaneously
-// join everyone
-
-//( if no meals, return ;
-//	if there is only one philo, TODO)
-void	finish_must_eat(t_table *table)
+void	philo_routine(void )
 {
-	t_philo	*philo;
 
-	if (table->must_eat != -1)
-	{
-		if (philo->meal_counter == table->must_eat)
-		{
-			//if they finished, what to do next? stop the process? how?
-		}
-	}
 }
 
-void dining(t_table *table)
+void	join_threads(t_table *table)
 {
-	int i;
-	pthread_t *threads;
+	int	i;
 
-	threads = malloc(table->philo_sum * sizeof(pthread_t));
-	if (threads == NULL)
-		exit(EXIT_FAILURE);
 	i = 0;
-	pthread_mutex_init(&table->mutex, NULL);
-
-	while (i <= table->philo_sum)
+	while (table->philo_sum > i)
 	{
-		table->philo->id = i + 1;
-		if (pthread_create(&threads[i], NULL, threadFunction, &table->philo[i]) != 0)
-			//TODO: free(threads); free(table->forks)? ; exit(EXIT_FAILURE);
+		pthread_join(table->philo[i].thread, NULL);
 		i++;
 	}
-	i = 0;
-	while (i < table->philo_sum)
-	{
-		if (pthread_join(threads[i], NULL) != 0)
-			//TODO: free(threads); free(table->forks)? ; exit(EXIT_FAILURE);
-		i++;
-	}
-	pthread_mutex_destroy(&table->mutex);
-	free(threads);
 }
-void threadFunction(void *arg)
+
+void	philo_eat(t_philo *philo)
 {
-	t_philo *philo;
-	t_fork	*fork;
-
-	// t_philo philo = (t_philo *)arg;
-	// printf(THINKING "philosopher %d is thinking\n" RESET, philo->id);
-	// usleep(100);
-
-	pthread_mutex_lock(philo->first_fork);
-	printf("philosopher %d is taking the first fork\n", philo->id, fork->fork_id);
-	pthread_mutex_lock(philo->second_fork);
-	printf("philosopher %d is taking the second fork\n", philo->id, fork->fork_id);
-	
-	printf(EATING "philosopher %d is eating\n" RESET, philo->id);
-	usleep(100);
-
-	pthread_mutex_unlock(&philo->first_fork);
-	pthread_mutex_unlock(&philo->second_fork);	
-	
-	printf("philosopher %d is sleeping\n", philo->id);
-	usleep(100);
-
+	if (philo->table->end_simulation)
+        return ;
+	philo->last_meal_time = get_time();
+	if (philo->id % 2 == 0)
+	{
+		pthread_mutex_lock(&philo->first_fork->mutex);
+		pthread_mutex_lock(&philo->second_fork->mutex);
+	}
+	else
+	{
+		pthread_mutex_lock(&philo->second_fork->mutex);
+		pthread_mutex_lock(&philo->first_fork->mutex);
+	}
+	pthread_mutex_lock(&philo->table->write_mutex);
+	printf("philosopher %d is eating\n", philo->id);
+	pthread_mutex_unlock(&philo->table->write_mutex);
+	usleep(philo->table->time_to_eat * 1000);
+	philo->meal_counter++;
+	check_must_eat(philo);
+	if (philo->id % 2 == 0)
+	{
+		pthread_mutex_unlock(&philo->first_fork->mutex);
+		pthread_mutex_unlock(&philo->second_fork->mutex);
+	}
+	else
+	{
+		pthread_mutex_unlock(&philo->second_fork->mutex);
+		pthread_mutex_unlock(&philo->first_fork->mutex);
+	}
 }
 
-long	get_time(void)
+void	check_must_eat(t_philo *philo)
+{
+	if (philo->must_eat != -1 && philo->meal_counter 
+		== philo->must_eat && philo->full == false)
+	{
+		philo->full = true;
+		pthread_mutex_lock(&philo->full_mutex);
+		philo->table->full_philo++;
+		if (philo->table->full_philo == philo->table->philo_sum)
+			philo->table->end_simulation = true;
+		pthread_mutex_unlock(&philo->full_mutex);
+	}
+}
+
+int	monitor(t_table *table)
+{
+	long	time;
+
+	time = get_time();
+	if (time - table->start_time >= table->time_to_die)
+	{
+		printf ("%ld philosopher %d died\n", time, table->philo->id);
+		return (-1);
+	}
+}
+
+long	get_time()
 {
 	struct timeval	tv;
 	long			start;
 
 	if (gettimeofday(&tv, NULL) != 0)
 	{
-		printf("Time Of Day: Error!\n");
+		printf("Time of Day: Errpr!\n");
 		return (-1);
 	}
 	start = tv.tv_sec * 1e3 + tv.tv_usec / 1e3;
 	return (start);
 }
 
-//eat 
-void	dining(t_table *table)
+void	one_philo(t_philo *philo)
 {
-	pthread_mutex_init(&table->philo
-	table->start_time = get_time();
-	table->philo->death_time = table->start_time + table->time_to_die;
+	if (philo->table->philo_sum == 1)
+	{
+		
+	}
 }

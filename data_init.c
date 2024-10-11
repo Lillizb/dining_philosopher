@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:54:25 by ygao              #+#    #+#             */
-/*   Updated: 2024/10/10 17:40:27 by ygao             ###   ########.fr       */
+/*   Updated: 2024/10/11 17:58:16 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,12 @@ void	data_init(t_table *table, int ac, char **av)
 	table->time_to_eat = ft_atol(av[3]);
 	table->time_to_sleep = ft_atol(av[4]);
 	table->start_time = 0;
+	table->full_philo = 0;
 	table->end_simulation = false;
 	if (ac == 6)
-		table->must_eat = ft_atol(av[5]);
+		table->philo->must_eat = ft_atol(av[5]);
 	else
-		table->must_eat = -1;
+		table->philo->must_eat = -1;
 	if (pthread_mutex_init(&table->mutex, NULL) != 0)
 		error_exit(MUTEX_ERR, table);
 	if (pthread_mutex_init(&table->write_mutex, NULL) != 0)
@@ -53,6 +54,7 @@ void	philo_init(t_table *table)
 		table->philo[i].id = i + 1;
 		table->philo[i].full = false;
 		table->philo[i].meal_counter = 0;
+		table->philo[i].last_meal_time = 0;
 		assign_fork(table, i);
 		if (pthread_mutex_init(&table->philo[i].mutex, NULL) != 0)
 			exit_error(MUTEX_ERR, table);
