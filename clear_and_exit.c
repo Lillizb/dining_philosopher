@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 13:00:38 by ygao              #+#    #+#             */
-/*   Updated: 2024/10/10 17:33:21 by ygao             ###   ########.fr       */
+/*   Updated: 2024/10/15 17:29:55 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,4 +24,12 @@ void	ft__exit(t_table *table)
 {
 	free(table);
 	exit(EXIT_FAILURE);
+}
+
+void	free_struct(t_table *table)
+{
+	if (table->fork)
+		free(table->fork);
+	if (table->philo)
+		free(table->philo);
 }
