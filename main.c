@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:54:07 by ygao              #+#    #+#             */
-/*   Updated: 2024/10/10 16:49:37 by ygao             ###   ########.fr       */
+/*   Updated: 2024/10/16 12:38:17 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,15 @@ int	main(int ac, char **av)
 	//4. clean
 }
 
-void destroy_mutex_exit(t_table *table)
+void	one_philo_case(t_philo *philo)
 {
-	
+	if (philo->table->philo_sum == 1)
+	{
+		
+	}
 }
+
+
 
 
 	// t_table table;

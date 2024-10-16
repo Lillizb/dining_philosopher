@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:52:59 by ygao              #+#    #+#             */
-/*   Updated: 2024/10/11 18:12:16 by ygao             ###   ########.fr       */
+/*   Updated: 2024/10/16 13:16:19 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ typedef struct s_philo
 {
 	t_table			*table;
 	int				id;
+	long			dead;
 	bool			full; 
 	pthread_t		thread;
 	pthread_mutex_t	full_mutex;
@@ -49,6 +50,7 @@ typedef struct s_philo
 	long			must_eat;
 	long			last_meal_time;
 	pthread_mutex_t	mutex;
+	pthread_mutex_t	meal_mutex;
 }	t_philo;
 
 typedef struct s_table
@@ -57,6 +59,8 @@ typedef struct s_table
 	t_fork			*fork;
 
 	long			philo_sum;
+	long			thread;
+	bool			ready;
 	long			fork_sum;
 	long			full_philo;
 	pthread_mutex_t	mutex;
