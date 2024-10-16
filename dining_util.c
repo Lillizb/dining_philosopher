@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 11:57:59 by ygao              #+#    #+#             */
-/*   Updated: 2024/10/16 12:47:35 by ygao             ###   ########.fr       */
+/*   Updated: 2024/10/16 13:34:16 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,15 @@ void	take_fork(t_philo *philo, t_table *table)
 		return ;
 	if (philo->id % 2 == 0)
 	{
-		pthread_mutex_lock(&philo->first_fork->mutex);
-		pthread_mutex_lock(&philo->second_fork->mutex);
+		pthread_mutex_lock(&philo->fork[philo->id].mutex);
+		pthread_mutex_lock(&philo->fork[(philo->id + 1) 
+			% table->philo_sum].mutex);
 	}
 	else
 	{
-		pthread_mutex_lock(&philo->second_fork->mutex);
-		pthread_mutex_lock(&philo->first_fork->mutex);
+		pthread_mutex_lock(&philo->fork[philo->id].mutex);
+		pthread_mutex_lock(&philo->fork[(philo->id - 1) 
+			% table->philo_sum].mutex);
 	}
 }
 
@@ -42,13 +44,15 @@ void	free_fork(t_philo *philo, t_table *table)
 {
 	if (philo->id % 2 == 0)
 	{
-		pthread_mutex_unlock(&philo->first_fork->mutex);
-		pthread_mutex_unlock(&philo->second_fork->mutex);
+		pthread_mutex_unlock(&philo->fork[philo->id].mutex);
+		pthread_mutex_unlock(&philo->fork[(philo->id + 1) 
+			% table->philo_sum].mutex);
 	}
 	else
 	{
-		pthread_mutex_unlock(&philo->second_fork->mutex);
-		pthread_mutex_unlock(&philo->first_fork->mutex);
+		pthread_mutex_unlock(&philo->fork[philo->id].mutex);
+		pthread_mutex_unlock(&philo->fork[(philo->id - 1) 
+			% table->philo_sum].mutex);
 	}
 }
 

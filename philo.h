@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:52:59 by ygao              #+#    #+#             */
-/*   Updated: 2024/10/16 13:16:19 by ygao             ###   ########.fr       */
+/*   Updated: 2024/10/16 17:34:29 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,14 +38,14 @@ typedef struct s_fork
 
 typedef struct s_philo
 {
+	t_fork			*fork;
 	t_table			*table;
 	int				id;
 	long			dead;
 	bool			full; 
-	pthread_t		thread;
+	bool			eating;
+	pthread_t		monitor;
 	pthread_mutex_t	full_mutex;
-	t_fork			*first_fork;
-	t_fork			*second_fork;
 	long			meal_counter;
 	long			must_eat;
 	long			last_meal_time;
@@ -57,13 +57,14 @@ typedef struct s_table
 {
 	t_philo			*philo;
 	t_fork			*fork;
-
+	pthread_t		*thread;
+	bool			ready;
 	long			philo_sum;
 	long			thread;
-	bool			ready;
 	long			fork_sum;
 	long			full_philo;
 	pthread_mutex_t	mutex;
+	pthread_mutex_t	start;
 	long			time_to_die;
 	long			time_to_eat;
 	long			time_to_sleep;
