@@ -1,21 +1,36 @@
-NAME	=	philo_github
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2024/10/21 10:53:36 by ygao              #+#    #+#              #
+#    Updated: 2024/10/21 11:42:53 by ygao             ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+NAME	=	philo
 
 CC		=	cc
 
 CFLAGS	=	 -Wall -Wextra -Werror
 
-SRCS	=	data_init.c dining.c main.c parse_input.c \
-			utils.c \
+SRC		=	 main.c dining.c parse_input.c threads.c other_actions.c \
+			 clean.c dining_utils.c data_init.c init_utils.c
 
-OBJS	=	$(SRCS: .c=.o)
+OBJ		= 	$(SRC:.c=.o)
 
-all:		$(NAME)
+all:		$(NAME) clean
 
-$(NAME):	$(OBJS)
-			$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
+$(NAME)	: $(OBJ)
+	$(CC) $(OBJ) -o $(NAME)
+
+%.o : %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-			rm -rf $(OBJS)
+			rm -rf $(OBJ)
 
 fclean:		clean
 			rm -rf $(NAME)
@@ -25,7 +40,6 @@ re:
 
 .PHONY:
 			all clean fclean re
-
 
 
 

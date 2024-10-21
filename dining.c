@@ -6,13 +6,13 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:54:13 by ygao              #+#    #+#             */
-/*   Updated: 2024/10/16 17:42:06 by ygao             ###   ########.fr       */
+/*   Updated: 2024/10/21 14:34:49 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	routine(void *data)
+void	*routine(void *data)
 {
 	t_philo	*philo;
 
@@ -29,6 +29,7 @@ void	routine(void *data)
 	}
 	else
 		pthread_mutex_unlock(&philo->table->mutex);
+	return (NULL);
 }
 
 void	eat_schedule(t_philo *philo, t_table *table)
@@ -57,12 +58,23 @@ void	philo_eat(t_philo *philo, t_table *table)
 	free_fork(philo, table);
 	pthread_mutex_lock(&philo->mutex);
 	philo->meal_counter++; 
-	philo->eating == 0;
+	philo->eating = 0;
 	pthread_mutex_unlock(&philo->mutex);
-	while (philo->dead == 0 && table->end_simulation == false)
+	while (philo->dead == 0 && read_bool(&philo->table->mutex,
+			&philo->table->end_simulation) == false)
 	{
+		pthread_mutex_lock(&philo->meal_mutex);
+		if (philo->eating == 0)
+		{
+			pthread_mutex_unlock(&philo->meal_mutex);
+			break ;
+		}
+		pthread_mutex_unlock(&philo->meal_mutex);
+		if (read_bool(&philo->table->mutex,
+				&philo->table->end_simulation) == true)
+			break ;
 		eat(philo, table);
-		write_message("SLEEPUNG", philo);
+		write_message(SLEEPING, philo);
 		usleep(table->time_to_sleep * 1000);
 		think(philo, table);
 	}
@@ -73,27 +85,13 @@ void	eat(t_philo *philo, t_table *table)
 	if (table->end_simulation == false && philo->dead == 0)
 	{
 		philo->last_meal_time = get_time();
-		write_message("EATING", philo);
+		write_message(EATING, philo);
 		pthread_mutex_lock(&philo->meal_mutex);
-		philo->eating == 1;
+		philo->eating = 1;
 		pthread_mutex_unlock(&philo->meal_mutex);
 		usleep(philo->table->time_to_eat * 1000);
 		check_must_eat(philo);
 	}
-}
-
-void	think(t_philo *philo, t_table *table)
-{
-	long	think_time;
-
-	if (table->end_simulation == false)
-		write_message("THINKING", philo);
-	if (philo->id % 2 == 0)
-		return ;
-	think_time = (table->time_to_eat * 2) - table->time_to_sleep;
-	if (think_time < 0)
-		think_time = 0;
-	usleep(think_time * 1000);
 }
 
 void	check_must_eat(t_philo *philo)

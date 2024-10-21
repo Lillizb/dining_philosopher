@@ -6,153 +6,62 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:54:07 by ygao              #+#    #+#             */
-/*   Updated: 2024/10/16 12:38:17 by ygao             ###   ########.fr       */
+/*   Updated: 2024/10/21 14:31:54 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <pthread.h>
-#include <time.h>
-#include <unistd.h> //sleep 
-
-#include <sys/time.h>
 #include "philo.h"
 
 int	main(int ac, char **av)
 {
 	t_table	*table;
 
-	if (check_ac(ac) == -1)
+	table = malloc(sizeof(t_table));
+	if (table == NULL)
+	{
+		printf(ALLOC_TABLE_ERR);
 		return (-1);
+	}
+	if (check_ac(ac) == -1)
+	{
+		free(table);
+		return (-1);
+	}
 	if (ac == 5 || ac == 6)
 	{
-		parse_input(table, av);
+		parse_input(ac, av);
 		data_init(table, ac, av);
-		dining(table);
+		create_thread(table);
 	}
-	//4. clean
+	clean_and_exit(table);
 }
 
-void	one_philo_case(t_philo *philo)
+void	*one(void *data)
 {
-	if (philo->table->philo_sum == 1)
-	{
-		
-	}
+	t_table	*table;
+	t_philo	*philo;
+
+	philo = (t_philo *)data;
+	table = philo->table;
+	table->start_time = get_time();
+	philo->last_meal_time = get_time();
+	write_message(TAKE_FIRST_FORK, philo);
+	if ((get_time() - philo->last_meal_time) < table->time_to_die)
+		usleep(table->time_to_die - (get_time() - philo->last_meal_time));
+	write_message(DIED, philo);
+	return (NULL);
 }
 
-
-
-
-	// t_table table;
-
-	// int philo_count = 5;
-	// int fork_count = 5;
-
-	// table.philo_sum = philo_count;
-	// table.fork_sum = fork_count;
-	
-
-	//assign_fork(&table);
-
-	// for(int i = 0; i < philo_count; i++)
-	// {
-	// 	printf("Philosopher: %d: id = %d, full=%d, meal_counter = %d\n",
-	// 		i, table.philo[i].id, table.philo[i].full, table.philo->meal_counter);
-	// }	
-	// for(int i = 0; i < fork_count; i++)
-	// {
-	// 	printf("forks: %d: id=%d, fork_ok=%d\n",
-	// 		i, table.fork[i].id, table.fork[i].fork_ok);
-	// }
-
-	// free(table.philo);
-	// free(table.fork);
-
-	
-
-
-	// t_fork *fork;
-
-	// i = 0;
-	// while (table->fork_sum > i)
-	// {
-	// 	fork = &table->fork[i];
-	// 	fork->id = i;
-	// 	printf("fork ID: %d\n", fork->id);
-	// 	fork->fork_ok = false;
-	// 	i++;
-	// }
-// 	if (ac == 5)
-// 	{
-// 		//1. error checking, filling table
-// 			parse_input(&table, av);
-// 		//2. creating the actual thing
-// 			data_init(&table);
-// 		// 3. dinner start
-// 			dinner_start(&table);
-// 		//4. no leaks
-// 			clean(&table) //philo is full or philo died
-// 	}
-// 	else
-// 		//print error
-// }
-
-
-// pthread_mutex_t mutex;
-// int philid = 0;
-
-// void* phil(void* arg)
-// {
-// 	for(int i = 0; i < 5; i++)
-// 	{
-// 		pthread_mutex_lock(&mutex);
-// 		philid += 1;
-// 		printf("phil %d is here\n", philid);
-// 		pthread_mutex_unlock(&mutex);
-// 		sleep(1);
-// 	}
-// }
-
-// // void* car(void *arg) 
-// // {
-// // 	if (pthread_mutex_lock(&mutex) == 0)
-// // 	{
-// // 		printf("thinking\n");
-		
-// // 		pthread_mutex_unlock(&mutex);
-// // 		printf("unlock\n");
-// // 		sleep(1);
-// // 	}	
-// // }
-
-// int main(int ac, char **av)
-// {
-// 	pthread_t th[4];
-// 	pthread_mutex_init(&mutex, NULL);
-// 	for (int i = 0; i < 4; i++)
-// 	{
-// 		if (i == 1)
-// 		{
-// 			if (pthread_create(&th[i], NULL, &phil, NULL) != 0)
-// 				perror("failed to create thread");
-// 		}
-// 		// else
-// 		// {
-// 		// 	if (pthread_create(&th[i], NULL, &car, NULL) != 0)
-// 		// 		perror("failed to create thread");
-// 		// }
-// 	}
-// 	for (int i = 0; i < 4; i++)
-// 	{
-// 		pthread_join(th[i], NULL)
-// 			//perror("failed to join thread");
-// 	}
-// 	pthread_mutex_destroy(&mutex);
-// 	return (0);
-// }
-
-// pthread_create(&table->philo[i], NULL, &table->philo, NULL);
-// pthread_join(table->philo[i], NULL)
-// pthread_mutex_destroy(&table->philo[i]);
+void	one_philo(t_table *table)
+{
+	if (table->philo_sum == 1)
+	{
+		if (pthread_create(&table->thread[0], NULL, &one, table) != 0)
+		{
+			printf("One Philo thread creation failed\n");
+			clean_and_exit(table);
+		}
+	}
+	pthread_join(table->thread[0], NULL);
+	clean_and_exit(table);
+}

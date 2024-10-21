@@ -6,50 +6,85 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 15:04:16 by ygao              #+#    #+#             */
-/*   Updated: 2024/10/16 17:49:45 by ygao             ###   ########.fr       */
+/*   Updated: 2024/10/21 14:38:04 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-void	routine(void *data);
 
 void	create_thread(t_table *table)
 {
 	int	i;
 
 	i = -1;
-	if (table->philo->must_eat > -1)
-	{
-		if (pthread_create(&table->philo->monitor, NULL, &monitor, table) != 0)
-			exit_clean(); //TODO
-	}
-	pthread_mutex_lock(&table->start);
+	if (table->philo->must_eat > -1 || table->philo_sum == 0)
+		return ;
+	if (table->philo_sum == 1)
+		return (one_philo(table));
 	while (++i < table->philo_sum)
 	{
 		if (pthread_create(&table->thread[i], NULL, 
 				&routine, &table->philo[i]) != 0)
-		return (exit_clean()); //TODO
+			error_exit(ALLOC_ERR_THREAD, table);
 	}
-	pthread_mutex_unlock(&table->start);
+	if (pthread_create(&table->monitor, NULL, &monitor, table) != 0)
+		error_exit(ALLOC_ERR_THREAD, table);
 	pthread_mutex_lock(&table->mutex);
 	if (i == table->philo_sum)
-		table->ready == true;
+	{
+		table->start_time = get_time();
+		table->ready = true;
+	}
 	pthread_mutex_unlock(&table->mutex);
-	thread_join(table);
+	join_threads(table);
 }
 
 void	*monitor(void *data)
 {
 	t_table	*table;
+	int		i;
+	long	time_gap_last_meal;
 
-	table = (void *)data;
-	while (table->philo->dead == 0)
+	table = (t_table *)data;
+	i = 0;
+	while (1)
 	{
 		pthread_mutex_lock(&table->mutex);
-		if (table->full_philo == table->philo_sum)
-			table->end_simulation = true;
+		while (i < table->philo_sum)
+		{
+			time_gap_last_meal = get_time() - table->philo[i].last_meal_time;
+			if (time_gap_last_meal > table->time_to_die)
+			{
+				table->philo[i].dead = 1;
+				write_message(DIED, &table->philo[i]);
+				table->end_simulation = true;
+				pthread_mutex_unlock(&table->mutex);
+				return (NULL);
+			}
+			i++;
+		}
+		if (table->end_simulation)
+		{
+			pthread_mutex_unlock(&table->mutex);
+			break ;
+		}
 		pthread_mutex_unlock(&table->mutex);
+		usleep(1000);
 	}
 	return (NULL);
+}
+
+void	join_threads(t_table *table)
+{
+	int	i;
+
+	i = -1;
+	while (table->philo_sum > ++i)
+	{
+		if (pthread_join(table->thread[i], NULL))
+			clean_and_exit(table);
+		usleep(10 * 1000);
+	}
+	if (pthread_join(table->monitor, NULL) != 0)
+		clean_and_exit(table);
 }

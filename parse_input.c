@@ -6,13 +6,13 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:53:52 by ygao              #+#    #+#             */
-/*   Updated: 2024/10/10 16:35:04 by ygao             ###   ########.fr       */
+/*   Updated: 2024/10/21 10:25:21 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	parse_input(t_table *table, int ac, char **av)
+void	parse_input(int ac, char **av)
 {
 	input_valid_check(av[1]);
 	input_valid_check(av[2]);
@@ -22,7 +22,7 @@ void	parse_input(t_table *table, int ac, char **av)
 		input_valid_check(av[5]);
 }
 
-void	check_ac(int ac)
+int	check_ac(int ac)
 {
 	if (ac < 5 || ac > 6)
 	{
@@ -66,10 +66,3 @@ int	is_digit(char *s)
 	}
 	return (0);
 }
-// int	is_space(char str)
-// {
-// 	if (str == ' ' || str == '\t' || str == '\n' 
-// 		|| str == '\v' || str == '\f' || str == '\r')
-// 		return (1);
-// 	return (0);
-// }

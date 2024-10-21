@@ -1,36 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   thread_utils.c                                     :+:      :+:    :+:   */
+/*   other_actions.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/16 12:34:58 by ygao              #+#    #+#             */
-/*   Updated: 2024/10/16 16:45:24 by ygao             ###   ########.fr       */
+/*   Created: 2024/10/21 10:05:28 by ygao              #+#    #+#             */
+/*   Updated: 2024/10/21 12:53:50 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	join_threads(t_table *table)
+void	think(t_philo *philo, t_table *table)
 {
-	int	i;
+	long	think_time;
 
-	i = 0;
-	while (table->philo_sum > i)
-	{
-		if (pthread_join(table->thread[i], NULL))
-			return (exit_clean());//TODO
-		usleep(10 * 1000);
-	}
-	if (table->philo->must_eat > -1)
-	{
-		if (pthread_join(table->philo->monitor, NULL) != 0)
-			return (exit_clean());//TODO
-	}
-}
-
-void exit_clean() //TODO
-{
-	
+	if (table->end_simulation == false)
+		write_message(THINKING, philo);
+	if (philo->id % 2 == 0)
+		return ;
+	think_time = (table->time_to_eat * 2) - table->time_to_sleep;
+	if (think_time < 0)
+		think_time = 0;
+	usleep(think_time * 1000);
 }

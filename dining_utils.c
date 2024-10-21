@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   dining_util.c                                      :+:      :+:    :+:   */
+/*   dining_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 11:57:59 by ygao              #+#    #+#             */
-/*   Updated: 2024/10/16 13:34:16 by ygao             ###   ########.fr       */
+/*   Updated: 2024/10/21 14:31:00 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,36 +24,45 @@ bool	read_bool(pthread_mutex_t *mutex, bool *value)
 
 void	take_fork(t_philo *philo, t_table *table)
 {
-	if (philo->table->end_simulation)
+	int	first_fork;
+	int	second_fork;
+	int	tmp;
+
+	first_fork = philo->id;
+	second_fork = (philo->id + 1) % table->philo_sum;
+	if (first_fork > second_fork)
+	{
+		tmp = first_fork;
+		first_fork = second_fork;
+		second_fork = tmp;
+	}
+	if (read_bool(&philo->table->mutex, &philo->table->end_simulation))
+   	{
+		pthread_mutex_unlock(&philo->fork[first_fork].mutex);
 		return ;
-	if (philo->id % 2 == 0)
-	{
-		pthread_mutex_lock(&philo->fork[philo->id].mutex);
-		pthread_mutex_lock(&philo->fork[(philo->id + 1) 
-			% table->philo_sum].mutex);
-	}
-	else
-	{
-		pthread_mutex_lock(&philo->fork[philo->id].mutex);
-		pthread_mutex_lock(&philo->fork[(philo->id - 1) 
-			% table->philo_sum].mutex);
-	}
+	} 
+	pthread_mutex_lock(&philo->fork[first_fork].mutex);
+	pthread_mutex_lock(&philo->fork[second_fork].mutex);
+	write_message(TAKE_FIRST_FORK, philo);
+	write_message(TAKE_SECOND_FORK, philo);
 }
 
 void	free_fork(t_philo *philo, t_table *table)
 {
-	if (philo->id % 2 == 0)
+	int	first_fork;
+	int	second_fork;
+	int	tmp;
+
+	first_fork = philo->id;
+	second_fork = (philo->id + 1) % table->philo_sum;
+	if (first_fork > second_fork)
 	{
-		pthread_mutex_unlock(&philo->fork[philo->id].mutex);
-		pthread_mutex_unlock(&philo->fork[(philo->id + 1) 
-			% table->philo_sum].mutex);
+		tmp = first_fork;
+		first_fork = second_fork;
+		second_fork = tmp;
 	}
-	else
-	{
-		pthread_mutex_unlock(&philo->fork[philo->id].mutex);
-		pthread_mutex_unlock(&philo->fork[(philo->id - 1) 
-			% table->philo_sum].mutex);
-	}
+	pthread_mutex_unlock(&philo->fork[first_fork].mutex);
+	pthread_mutex_unlock(&philo->fork[second_fork].mutex);
 }
 
 long	get_time(void)
@@ -70,9 +79,9 @@ long	get_time(void)
 	return (start);
 }
 
-void	write_message(char *s, t_philo *philo)
+void	write_message(t_symbol	symbol, t_philo *philo)
 {
-	long	time;
+	long		time;
 
 	time = get_time() - philo->table->start_time;
 	pthread_mutex_lock(&philo->table->write_mutex);
@@ -81,17 +90,17 @@ void	write_message(char *s, t_philo *philo)
 		pthread_mutex_unlock(&philo->table->write_mutex);
 		return ;
 	}
-	if (ft_strcmp("DIED", s) == 0)
-		printf(R" %ld %d died\n"B, time, philo->id);
-	else if (ft_strcmp("EATING", s) == 0)
+	if (symbol == DIED)
+		printf(R" %ld %d died"B, time, philo->id);
+	else if (symbol == EATING)
 		printf(G" %ld %d is eating\n"B, time, philo->id);
-	else if (ft_strcmp("SLEEPING", s) == 0)
+	else if (symbol == SLEEPING)
 		printf(" %ld %d is sleeping\n", time, philo->id);
-	else if (ft_strcmp("TAKE_FIRST_FORK", s) == 0)
+	else if (symbol == TAKE_FIRST_FORK)
 		printf(" %ld %d has taken a fork\n", time, philo->id);
-	else if (ft_strcmp("TAKE_SECOND_FORK", s) == 0)
+	else if (symbol == TAKE_SECOND_FORK)
 		printf(" %ld %d has taken a fork\n", time, philo->id);
-	else if (ft_strcmp("THINKING", s) == 0)
+	else if (symbol == THINKING)
 		printf(" %ld %d is thinking\n", time, philo->id);
 	pthread_mutex_unlock(&philo->table->write_mutex);
 }

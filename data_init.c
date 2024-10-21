@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:54:25 by ygao              #+#    #+#             */
-/*   Updated: 2024/10/16 15:06:57 by ygao             ###   ########.fr       */
+/*   Updated: 2024/10/21 14:23:44 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,20 +19,23 @@ void	data_init(t_table *table, int ac, char **av)
 	i = 0;
 	table->philo = malloc(sizeof(t_philo) * table->philo_sum);
 	if (!table->philo)
-		return (error_exit(ALLOC_ERR_PHILO, table));
+		error_exit(ALLOC_ERR_PHILO, table);
 	table->fork = malloc(sizeof(t_fork) * table->philo_sum);
-	if (!table->philo)
+	if (!table->fork)
 	{
 		free(table->philo);
-		return (error_exit(ALLOC_ERR_FORK, table));//error_exit - TODO
+		error_exit(ALLOC_ERR_FORK, table);
 	}
 	table->philo_sum = ft_atol(av[1]);
+	table->fork_sum = table->philo_sum;
+	table->thread_sum = table->philo_sum;
+	table->ready = false;
+	table->full_philo = 0;
 	table->time_to_die = ft_atol(av[2]);
 	table->time_to_eat = ft_atol(av[3]);
 	table->time_to_sleep = ft_atol(av[4]);
-	table->start_time = 0;
-	table->full_philo = 0;
 	table->end_simulation = false;
+	table->start_time = 0;
 	if (ac == 6)
 		table->philo->must_eat = ft_atol(av[5]);
 	else
@@ -45,32 +48,33 @@ void	data_init(t_table *table, int ac, char **av)
 
 void	philo_init(t_table *table)
 {
-	int	i;
+	long	i;
 
 	i = -1;
 	while (table->philo_sum > ++i)
 	{
 		table->philo[i].table = table;
+		table->philo[i].fork = table->fork;
 		table->philo[i].id = i + 1;
-		table->philo[i].full = false;
+		table->philo[i].dead = 0;
 		table->philo[i].meal_counter = 0;
+		table->philo[i].must_eat = table->philo->must_eat;
+		table->philo[i].eating = false;
+		table->philo[i].full = false;
 		table->philo[i].last_meal_time = 0;
-		table->philo[i].eating = 0;
 		if (pthread_mutex_init(&table->philo[i].mutex, NULL) != 0)
-			exit_error(MUTEX_ERR, table);
+			error_exit(MUTEX_ERR, table);
 	}
 }
 
 void	fork_init(t_table *table)
 {
 	int		i;
-	t_fork	*fork;
 
-	i = 0;
-	while (i < table->philo_sum)
+	i = -1;
+	while (++i < table->philo_sum)
 	{
 		if (pthread_mutex_init(&table->fork[i].mutex, NULL) != 0)
-			exit_error(MUTEX_ERR, table);
-		i++;
+			error_exit(MUTEX_ERR, table);
 	}
 }
