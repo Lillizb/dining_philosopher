@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:54:07 by ygao              #+#    #+#             */
-/*   Updated: 2024/10/21 14:31:54 by ygao             ###   ########.fr       */
+/*   Updated: 2024/11/18 13:37:18 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ int	main(int ac, char **av)
 	{
 		parse_input(ac, av);
 		data_init(table, ac, av);
+		philo_init(table);
+		fork_init(table);
 		create_thread(table);
 	}
 	clean_and_exit(table);

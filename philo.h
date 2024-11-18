@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:52:59 by ygao              #+#    #+#             */
-/*   Updated: 2024/10/21 13:56:45 by ygao             ###   ########.fr       */
+/*   Updated: 2024/11/18 14:34:24 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 # define PHILO_H
 
 #include <unistd.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <pthread.h>
-#include <stdio.h>
 #include <sys/time.h> //get time of day
 #include <limits.h> //INT_MAX
 
@@ -33,7 +33,7 @@
 #define ALLOC_ERR_FORK	"ERROR WITH ALLOCATING FORK MEMORY!\n"
 #define ALLOC_ERR_THREAD "ERROR WITH ALLOCATING THREAD MEMORY!\n"
 #define ALLOC_TABLE_ERR "ERROR WITH ALLOCATING TABLE MEMORY!\n"
-
+#define MEMORY_ALLOCATION_ERROR "MEMORY ALLOCATION ERROR\n"
 typedef struct s_table	t_table;
 
 typedef struct s_fork

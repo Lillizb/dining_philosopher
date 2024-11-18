@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 11:57:59 by ygao              #+#    #+#             */
-/*   Updated: 2024/10/21 14:31:00 by ygao             ###   ########.fr       */
+/*   Updated: 2024/11/18 14:00:18 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void	write_message(t_symbol	symbol, t_philo *philo)
 		return ;
 	}
 	if (symbol == DIED)
-		printf(R" %ld %d died"B, time, philo->id);
+		printf(R" %ld %d died\n"B, time, philo->id);
 	else if (symbol == EATING)
 		printf(G" %ld %d is eating\n"B, time, philo->id);
 	else if (symbol == SLEEPING)

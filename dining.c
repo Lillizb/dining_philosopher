@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:54:13 by ygao              #+#    #+#             */
-/*   Updated: 2024/10/21 14:34:49 by ygao             ###   ########.fr       */
+/*   Updated: 2024/11/18 14:42:19 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ void	*routine(void *data)
 		philo->last_meal_time = get_time();
 		pthread_mutex_unlock(&philo->mutex);
 		eat_schedule(philo, philo->table);
+		printf("philo %d is eeeeating\n", philo->id);
 		philo_eat(philo, philo->table);
 	}
 	else
@@ -48,12 +49,12 @@ void	eat_schedule(t_philo *philo, t_table *table)
 
 void	philo_eat(t_philo *philo, t_table *table)
 {
-	take_fork(philo, table);
 	if (table->philo_sum == 1)
 	{
 		usleep(table->time_to_die * 1000);
 		return ;
 	}
+	take_fork(philo, table);
 	eat(philo, table);
 	free_fork(philo, table);
 	pthread_mutex_lock(&philo->mutex);
@@ -84,7 +85,9 @@ void	eat(t_philo *philo, t_table *table)
 {
 	if (table->end_simulation == false && philo->dead == 0)
 	{
+		pthread_mutex_lock(&philo->mutex);
 		philo->last_meal_time = get_time();
+		pthread_mutex_unlock(&philo->mutex);
 		write_message(EATING, philo);
 		pthread_mutex_lock(&philo->meal_mutex);
 		philo->eating = 1;
