@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:52:59 by ygao              #+#    #+#             */
-/*   Updated: 2024/11/18 14:34:24 by ygao             ###   ########.fr       */
+/*   Updated: 2024/11/18 16:56:41 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ void	take_fork(t_philo *philo, t_table *table);
 void	free_fork(t_philo *philo, t_table *table);
 long	get_time(void);
 void	write_message(t_symbol symbol, t_philo *philo);
-long	get_time(void);
+long	get_microseconds(void);
 int		is_digit(char *s);
 void	ft__exit(t_table *table);
 long	ft_atol(char *str);
@@ -133,5 +133,8 @@ void	free_struct(t_table *table);
 int		ft_strcmp(const char *s1, const char *s2);
 int		ft_strlen(const char *s);
 int		is_space(char c);
+void	ft_usleep(long time);
+void	wait_for_start(t_table *table);
+bool	end_simulation(t_table *table);
 
 #endif

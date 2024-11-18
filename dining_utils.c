@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 11:57:59 by ygao              #+#    #+#             */
-/*   Updated: 2024/11/18 14:00:18 by ygao             ###   ########.fr       */
+/*   Updated: 2024/11/18 16:50:50 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,16 @@ bool	read_bool(pthread_mutex_t *mutex, bool *value)
 	pthread_mutex_lock(mutex);
 	result = *value;
 	pthread_mutex_unlock(mutex);
+	return (result);
+}
+
+bool	end_simulation(t_table *table)
+{
+	bool	result;
+
+	pthread_mutex_lock(&table->mutex);
+	result = table->end_simulation;
+	pthread_mutex_unlock(&table->mutex);
 	return (result);
 }
 
@@ -65,25 +75,12 @@ void	free_fork(t_philo *philo, t_table *table)
 	pthread_mutex_unlock(&philo->fork[second_fork].mutex);
 }
 
-long	get_time(void)
-{
-	struct timeval	tv;
-	long			start;
-
-	if (gettimeofday(&tv, NULL) != 0)
-	{
-		printf("Time of Day: Errpr!\n");
-		return (-1);
-	}
-	start = tv.tv_sec * 1e3 + tv.tv_usec / 1e3;
-	return (start);
-}
-
 void	write_message(t_symbol	symbol, t_philo *philo)
 {
 	long		time;
 
-	time = get_time() - philo->table->start_time;
+//the value of time is 0 by compiling
+	time = get_microseconds() - philo->table->start_time;
 	pthread_mutex_lock(&philo->table->write_mutex);
 	if (philo->table->end_simulation == true)
 	{
@@ -92,10 +89,10 @@ void	write_message(t_symbol	symbol, t_philo *philo)
 	}
 	if (symbol == DIED)
 		printf(R" %ld %d died\n"B, time, philo->id);
-	else if (symbol == EATING)
+	else if (symbol == EATING && philo->table->end_simulation == false)
 		printf(G" %ld %d is eating\n"B, time, philo->id);
 	else if (symbol == SLEEPING)
-		printf(" %ld %d is sleeping\n", time, philo->id);
+		printf(B" %ld %d is sleeping\n"B, time, philo->id);
 	else if (symbol == TAKE_FIRST_FORK)
 		printf(" %ld %d has taken a fork\n", time, philo->id);
 	else if (symbol == TAKE_SECOND_FORK)

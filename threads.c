@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 15:04:16 by ygao              #+#    #+#             */
-/*   Updated: 2024/11/18 14:40:55 by ygao             ###   ########.fr       */
+/*   Updated: 2024/11/18 16:59:42 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,21 +30,18 @@ void	create_thread(t_table *table)
 		if (pthread_create(&table->thread[i], NULL, 
 				&routine, &table->philo[i]) != 0)
 			error_exit(ALLOC_ERR_THREAD, table);
-		pthread_mutex_lock(&table->mutex);
-		if (i == table->philo_sum)
-		{
-			table->start_time = get_time();
-			table->ready = true;
-		}
-		pthread_mutex_unlock(&table->mutex);
 	}
-	//table->monitor = malloc(sizeof(pthread_t));
+	pthread_mutex_lock(&table->mutex);
+	table->ready = true;
+	table->start_time = get_microseconds();
+	pthread_mutex_unlock(&table->mutex);
 	if (pthread_create(&table->monitor, NULL, &monitor, table) != 0)
 		error_exit(ALLOC_ERR_THREAD, table);
 	join_threads(table);
-	free(table->thread);
+	pthread_join(table->monitor, NULL);
 }
 
+//has issue
 void	*monitor(void *data)
 {
 	t_table	*table;
@@ -60,7 +57,8 @@ void	*monitor(void *data)
 		{
 			printf("minitoring philo %d\n", i);
 			printf("table last_meal time %ld\n", table->philo[i].last_meal_time);
-			time_gap_last_meal = get_time() - table->philo[i].last_meal_time;
+			time_gap_last_meal = get_microseconds() 
+					- table->philo[i].last_meal_time;
 			if (time_gap_last_meal > table->time_to_die)
 			{
 				printf("time_gap_last_meal %ld \n", time_gap_last_meal);

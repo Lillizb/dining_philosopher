@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:54:25 by ygao              #+#    #+#             */
-/*   Updated: 2024/11/18 13:28:11 by ygao             ###   ########.fr       */
+/*   Updated: 2024/11/18 16:25:27 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	data_init(t_table *table, int ac, char **av)
 		free(table->philo);
 		error_exit(ALLOC_ERR_FORK, table);
 	}
-	table->thread_sum = table->philo_sum;
+	table->thread_sum = 0;
 	table->ready = false;
 	table->full_philo = 0;
 	table->time_to_die = ft_atol(av[2]);
@@ -43,6 +43,8 @@ void	data_init(t_table *table, int ac, char **av)
 		error_exit(MUTEX_ERR, table);
 	if (pthread_mutex_init(&table->write_mutex, NULL) != 0)
 		error_exit(MUTEX_ERR, table);
+	philo_init(table);
+	fork_init(table);
 }
 
 void	philo_init(t_table *table)

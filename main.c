@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:54:07 by ygao              #+#    #+#             */
-/*   Updated: 2024/11/18 13:37:18 by ygao             ###   ########.fr       */
+/*   Updated: 2024/11/18 16:56:09 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,6 @@ int	main(int ac, char **av)
 	{
 		parse_input(ac, av);
 		data_init(table, ac, av);
-		philo_init(table);
-		fork_init(table);
 		create_thread(table);
 	}
 	clean_and_exit(table);
@@ -45,11 +43,11 @@ void	*one(void *data)
 
 	philo = (t_philo *)data;
 	table = philo->table;
-	table->start_time = get_time();
-	philo->last_meal_time = get_time();
+	table->start_time = get_microseconds();
+	philo->last_meal_time = get_microseconds();
 	write_message(TAKE_FIRST_FORK, philo);
-	if ((get_time() - philo->last_meal_time) < table->time_to_die)
-		usleep(table->time_to_die - (get_time() - philo->last_meal_time));
+	if ((get_microseconds() - philo->last_meal_time) < table->time_to_die)
+		usleep(table->time_to_die - (get_microseconds() - philo->last_meal_time));
 	write_message(DIED, philo);
 	return (NULL);
 }

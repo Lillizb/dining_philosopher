@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:54:13 by ygao              #+#    #+#             */
-/*   Updated: 2024/11/18 14:42:19 by ygao             ###   ########.fr       */
+/*   Updated: 2024/11/18 16:54:07 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,24 @@
 void	*routine(void *data)
 {
 	t_philo	*philo;
+	t_table	*table;
 
-	philo = (t_philo *)data; 
+	philo = (t_philo *)data;
+	table = philo->table;
+	wait_for_start(table);
 	pthread_mutex_lock(&philo->table->mutex);
-	if (philo->table->ready == true)
+	table->thread_sum++;
+	pthread_mutex_unlock(&philo->table->mutex);
+	pthread_mutex_lock(&philo->mutex);
+	philo->last_meal_time = get_microseconds();
+	pthread_mutex_unlock(&philo->mutex);
+	eat_schedule(philo, philo->table);
+	while (end_simulation(table) == false)
 	{
-		pthread_mutex_unlock(&philo->table->mutex);
-		pthread_mutex_lock(&philo->mutex);
-		philo->last_meal_time = get_time();
-		pthread_mutex_unlock(&philo->mutex);
-		eat_schedule(philo, philo->table);
-		printf("philo %d is eeeeating\n", philo->id);
-		philo_eat(philo, philo->table);
+		philo_eat(philo, table);
+		think(philo, table);
+		check_must_eat(philo);
 	}
-	else
-		pthread_mutex_unlock(&philo->table->mutex);
 	return (NULL);
 }
 
@@ -38,7 +41,7 @@ void	eat_schedule(t_philo *philo, t_table *table)
 	if (table->philo_sum % 2 == 0)
 	{
 		if (philo->id % 2 == 0)
-			usleep(30 * 1000);
+			usleep(100);
 	}
 	else 
 	{
@@ -86,9 +89,10 @@ void	eat(t_philo *philo, t_table *table)
 	if (table->end_simulation == false && philo->dead == 0)
 	{
 		pthread_mutex_lock(&philo->mutex);
-		philo->last_meal_time = get_time();
+		philo->last_meal_time = get_microseconds();
 		pthread_mutex_unlock(&philo->mutex);
 		write_message(EATING, philo);
+		//printf(G "%d is eating\n"B, philo->id);
 		pthread_mutex_lock(&philo->meal_mutex);
 		philo->eating = 1;
 		pthread_mutex_unlock(&philo->meal_mutex);
