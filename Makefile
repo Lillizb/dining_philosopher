@@ -6,7 +6,7 @@
 #    By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/21 10:53:36 by ygao              #+#    #+#              #
-#    Updated: 2024/11/18 16:08:23 by ygao             ###   ########.fr        #
+#    Updated: 2024/11/20 16:18:20 by ygao             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ CC		=	cc
 CFLAGS	=	 -Wall -Wextra -Werror
 
 SRC		=	 main.c dining.c parse_input.c threads.c other_actions.c \
-			 clean.c dining_utils.c data_init.c init_utils.c time_utils.c \
+			 clean.c dining_utils.c dining_utils_2.c data_init.c init_utils.c time_utils.c \
 
 OBJ		= 	$(SRC:.c=.o)
 

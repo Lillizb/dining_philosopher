@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:54:07 by ygao              #+#    #+#             */
-/*   Updated: 2024/11/18 16:56:09 by ygao             ###   ########.fr       */
+/*   Updated: 2024/11/21 16:41:07 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,12 +56,12 @@ void	one_philo(t_table *table)
 {
 	if (table->philo_sum == 1)
 	{
-		if (pthread_create(&table->thread[0], NULL, &one, table) != 0)
+		if (pthread_create(&table->philo->thread, NULL, &one, table) != 0)
 		{
 			printf("One Philo thread creation failed\n");
 			clean_and_exit(table);
 		}
 	}
-	pthread_join(table->thread[0], NULL);
+	pthread_join(table->philo->thread, NULL);
 	clean_and_exit(table);
 }

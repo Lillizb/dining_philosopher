@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:52:59 by ygao              #+#    #+#             */
-/*   Updated: 2024/11/18 16:56:41 by ygao             ###   ########.fr       */
+/*   Updated: 2024/11/21 16:36:39 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,10 @@ typedef struct s_philo
 	long			last_meal_time;
 	bool			eating;
 	bool			full; 
+	pthread_t		thread;
 	pthread_mutex_t	full_mutex;
 	pthread_mutex_t	mutex;
-	pthread_mutex_t	meal_mutex;
+	pthread_mutex_t	meal_mutex; 
 	t_fork			*fork;
 	t_table			*table;
 }	t_philo;
@@ -70,7 +71,6 @@ typedef struct s_table
 	bool			ready;
 	bool			end_simulation;
 	pthread_t		monitor;
-	pthread_t		*thread;
 	pthread_mutex_t	mutex;
 	pthread_mutex_t	start;
 	pthread_mutex_t	write_mutex;
@@ -85,6 +85,8 @@ typedef enum e_symbol
 	SLEEPING,
 	TAKE_FIRST_FORK,
 	TAKE_SECOND_FORK,
+	FREE_FIRST_FORK,
+	FREE_SECOND_FORK,
 	DIED,
 }	t_symbol;
 
@@ -136,5 +138,6 @@ int		is_space(char c);
 void	ft_usleep(long time);
 void	wait_for_start(t_table *table);
 bool	end_simulation(t_table *table);
+bool threads_all_running(t_table *table);
 
 #endif

@@ -6,42 +6,39 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 15:04:16 by ygao              #+#    #+#             */
-/*   Updated: 2024/11/18 16:59:42 by ygao             ###   ########.fr       */
+/*   Updated: 2024/11/21 16:37:31 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	create_thread(t_table *table)
+void	create_thread(t_table *table)   
 {
 	int	i;
 
 	i = -1;
-	if (table->philo->must_eat > -1 || table->philo_sum == 0)
+	if (table->philo->must_eat < -1 || table->philo_sum == 0)
 		return ;
-	table->thread = malloc(sizeof(pthread_t) * table->philo_sum);
-	if (table->thread == NULL)
-		error_exit(MEMORY_ALLOCATION_ERROR, table);
 	if (table->philo_sum == 1)
 		return (one_philo(table));
 	while (++i < table->philo_sum)
 	{
 		printf("Creating thread %d\n", i);
-		if (pthread_create(&table->thread[i], NULL, 
+		if (pthread_create(&table->philo[i].thread, NULL, 
 				&routine, &table->philo[i]) != 0)
 			error_exit(ALLOC_ERR_THREAD, table);
 	}
+	if (pthread_create(&table->monitor, NULL, &monitor, table) != 0)
+		error_exit(ALLOC_ERR_THREAD, table);
 	pthread_mutex_lock(&table->mutex);
 	table->ready = true;
 	table->start_time = get_microseconds();
 	pthread_mutex_unlock(&table->mutex);
-	if (pthread_create(&table->monitor, NULL, &monitor, table) != 0)
-		error_exit(ALLOC_ERR_THREAD, table);
 	join_threads(table);
 	pthread_join(table->monitor, NULL);
 }
 
-//has issue
+//has issue 
 void	*monitor(void *data)
 {
 	t_table	*table;
@@ -49,34 +46,35 @@ void	*monitor(void *data)
 	long	time_gap_last_meal;
 
 	table = (t_table *)data;
-	i = 0;
-	while (1)
+	while (!threads_all_running(table))
+		;
+	while (!end_simulation(table))
 	{
-		pthread_mutex_lock(&table->mutex);
-		while (i < table->philo_sum)
+		i = -1;
+		while (++i < table->philo_sum)
 		{
-			printf("minitoring philo %d\n", i);
-			printf("table last_meal time %ld\n", table->philo[i].last_meal_time);
+			pthread_mutex_lock(&table->philo[i].mutex);
 			time_gap_last_meal = get_microseconds() 
 					- table->philo[i].last_meal_time;
-			if (time_gap_last_meal > table->time_to_die)
+			if (time_gap_last_meal >= table->time_to_die && !table->philo[i].eating)
 			{
-				printf("time_gap_last_meal %ld \n", time_gap_last_meal);
-				table->philo[i].dead = 1;
 				write_message(DIED, &table->philo[i]);
+				pthread_mutex_lock(&table->mutex);
+				//table->philo[i].dead = 1;
 				table->end_simulation = true;
 				pthread_mutex_unlock(&table->mutex);
-				return (NULL);
 			}
-			i++;
+			if (table->philo[i].must_eat > 0 && table->philo[i].meal_counter == table->philo[i].must_eat)
+			{
+			//	pthread_mutex_lock(&table->philo[i].mutex);
+				table->philo[i].full = true;
+				pthread_mutex_lock(&table->mutex);
+				table->full_philo++;
+				pthread_mutex_unlock(&table->mutex);
+			}
+			pthread_mutex_unlock(&table->philo[i].mutex);
+			check_must_eat(table->philo);
 		}
-		if (table->end_simulation)
-		{
-			pthread_mutex_unlock(&table->mutex);
-			break ;
-		}
-		pthread_mutex_unlock(&table->mutex);
-		usleep(1000);
 	}
 	return (NULL);
 }
@@ -88,7 +86,7 @@ void	join_threads(t_table *table)
 	i = -1;
 	while (table->philo_sum > ++i)
 	{
-		if (pthread_join(table->thread[i], NULL))
+		if (pthread_join(table->philo[i].thread, NULL))
 			clean_and_exit(table);
 		usleep(10 * 1000);
 	}

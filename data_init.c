@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:54:25 by ygao              #+#    #+#             */
-/*   Updated: 2024/11/18 16:25:27 by ygao             ###   ########.fr       */
+/*   Updated: 2024/11/20 14:31:34 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,13 @@
 void	data_init(t_table *table, int ac, char **av)
 {
 	table->philo_sum = ft_atol(av[1]);
+	table->time_to_die = ft_atol(av[2]);
+	table->time_to_eat = ft_atol(av[3]);
+	table->time_to_sleep = ft_atol(av[4]);
+	table->fork_sum = table->philo_sum;
 	table->philo = malloc(sizeof(t_philo) * table->philo_sum);
 	if (!table->philo)
 		error_exit(ALLOC_ERR_PHILO, table);
-	table->fork_sum = table->philo_sum;
 	table->fork = malloc(sizeof(t_fork) * table->philo_sum);
 	if (!table->fork)
 	{
@@ -28,12 +31,8 @@ void	data_init(t_table *table, int ac, char **av)
 	table->thread_sum = 0;
 	table->ready = false;
 	table->full_philo = 0;
-	table->time_to_die = ft_atol(av[2]);
-	table->time_to_eat = ft_atol(av[3]);
-	table->time_to_sleep = ft_atol(av[4]);
 	printf("Philosophers: %ld\n", table->philo_sum);
 	printf("Time to die: %ld\n", table->time_to_die);
-
 	table->end_simulation = false;
 	table->start_time = 0;
 	table->philo->must_eat = -1;

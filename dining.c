@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:54:13 by ygao              #+#    #+#             */
-/*   Updated: 2024/11/18 16:54:07 by ygao             ###   ########.fr       */
+/*   Updated: 2024/11/21 16:42:07 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,15 +23,15 @@ void	*routine(void *data)
 	pthread_mutex_lock(&philo->table->mutex);
 	table->thread_sum++;
 	pthread_mutex_unlock(&philo->table->mutex);
-	pthread_mutex_lock(&philo->mutex);
-	philo->last_meal_time = get_microseconds();
-	pthread_mutex_unlock(&philo->mutex);
-	eat_schedule(philo, philo->table);
-	while (end_simulation(table) == false)
+	eat_schedule(philo, table);
+	while (!end_simulation(table))
 	{
 		philo_eat(philo, table);
+		write_message(SLEEPING, philo);
 		think(philo, table);
-		check_must_eat(philo);
+		//usleep(table->time_to_sleep * 1000);
+        write_message(THINKING, philo);
+		// check_must_eat(philo);
 	}
 	return (NULL);
 }
@@ -41,11 +41,11 @@ void	eat_schedule(t_philo *philo, t_table *table)
 	if (table->philo_sum % 2 == 0)
 	{
 		if (philo->id % 2 == 0)
-			usleep(100);
+			ft_usleep(30000);
 	}
-	else 
+	else
 	{
-		if (philo->id % 2 != 0)
+		if (philo->id % 2)
 			think(philo, table);
 	}
 }
@@ -86,19 +86,19 @@ void	philo_eat(t_philo *philo, t_table *table)
 
 void	eat(t_philo *philo, t_table *table)
 {
-	if (table->end_simulation == false && philo->dead == 0)
-	{
-		pthread_mutex_lock(&philo->mutex);
-		philo->last_meal_time = get_microseconds();
-		pthread_mutex_unlock(&philo->mutex);
-		write_message(EATING, philo);
-		//printf(G "%d is eating\n"B, philo->id);
-		pthread_mutex_lock(&philo->meal_mutex);
-		philo->eating = 1;
-		pthread_mutex_unlock(&philo->meal_mutex);
-		usleep(philo->table->time_to_eat * 1000);
-		check_must_eat(philo);
-	}
+	pthread_mutex_lock(&philo->mutex);
+	philo->last_meal_time = get_microseconds();
+	printf("philo %d last meal time: %ld\n", philo->id, philo->last_meal_time);
+	pthread_mutex_unlock(&philo->mutex);
+	write_message(EATING, philo);
+	// pthread_mutex_lock(&philo->meal_mutex);
+	// philo->eating = 1;
+	// pthread_mutex_unlock(&philo->meal_mutex);
+	usleep(table->time_to_eat * 1000);
+	pthread_mutex_lock(&philo->mutex);
+	philo->meal_counter++;
+	pthread_mutex_unlock(&philo->mutex);
+	check_must_eat(philo);
 }
 
 void	check_must_eat(t_philo *philo)

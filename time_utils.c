@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/18 15:34:27 by ygao              #+#    #+#             */
-/*   Updated: 2024/11/18 16:56:39 by ygao             ###   ########.fr       */
+/*   Updated: 2024/11/20 17:40:02 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,24 +29,24 @@ long	get_microseconds(void)
 	return (microseconds);
 }
 
-// void	ft_usleep(long time)
-// {
-// 	long	left_time;
-// 	long	start;
+void	ft_usleep(long time)
+{
+	long	left_time;
+	long	start;
 
-// 	start = get_time_mircoseconds();
-// 	while ((get_time_mircoseconds() - start) < time)
-// 	{
-// 		left_time = time - (get_time_mircoseconds() - start);
-// 		if (left_time > 1e4)
-// 			usleep(left_time / 2);
-// 		else
-// 		{
-// 			while ((get_time_mircoseconds() - start) < time)
-// 				;
-// 		}
-// 	}
-// }
+	start = get_microseconds();
+	while ((get_microseconds() - start) < time)
+	{
+		left_time = time - (get_microseconds() - start);
+		if (left_time > 1e4)
+			usleep(left_time / 2);
+		else
+		{
+			while ((get_microseconds() - start) < time)
+				;
+		}
+	}
+}
 
 // long	get_time(void)
 // {

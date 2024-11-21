@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 11:57:59 by ygao              #+#    #+#             */
-/*   Updated: 2024/11/18 16:50:50 by ygao             ###   ########.fr       */
+/*   Updated: 2024/11/20 17:25:21 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,12 @@ bool	read_bool(pthread_mutex_t *mutex, bool *value)
 
 bool	end_simulation(t_table *table)
 {
-	bool	result;
+	bool	end;
 
 	pthread_mutex_lock(&table->mutex);
-	result = table->end_simulation;
+	end = table->end_simulation;
 	pthread_mutex_unlock(&table->mutex);
-	return (result);
+	return (end);
 }
 
 void	take_fork(t_philo *philo, t_table *table)
@@ -46,14 +46,14 @@ void	take_fork(t_philo *philo, t_table *table)
 		first_fork = second_fork;
 		second_fork = tmp;
 	}
+	pthread_mutex_lock(&philo->fork[first_fork].mutex);
+	write_message(TAKE_FIRST_FORK, philo);
 	if (read_bool(&philo->table->mutex, &philo->table->end_simulation))
    	{
 		pthread_mutex_unlock(&philo->fork[first_fork].mutex);
 		return ;
-	} 
-	pthread_mutex_lock(&philo->fork[first_fork].mutex);
+	}
 	pthread_mutex_lock(&philo->fork[second_fork].mutex);
-	write_message(TAKE_FIRST_FORK, philo);
 	write_message(TAKE_SECOND_FORK, philo);
 }
 
@@ -72,7 +72,9 @@ void	free_fork(t_philo *philo, t_table *table)
 		second_fork = tmp;
 	}
 	pthread_mutex_unlock(&philo->fork[first_fork].mutex);
+	write_message(FREE_FIRST_FORK, philo);
 	pthread_mutex_unlock(&philo->fork[second_fork].mutex);
+	write_message(FREE_SECOND_FORK, philo);
 }
 
 void	write_message(t_symbol	symbol, t_philo *philo)
@@ -88,16 +90,21 @@ void	write_message(t_symbol	symbol, t_philo *philo)
 		return ;
 	}
 	if (symbol == DIED)
-		printf(R" %ld %d died\n"B, time, philo->id);
+		printf(R " %ld %d died\n"B, time, philo->id);
 	else if (symbol == EATING && philo->table->end_simulation == false)
-		printf(G" %ld %d is eating\n"B, time, philo->id);
+		printf(G " %ld %d is eating\n"B, time, philo->id);
 	else if (symbol == SLEEPING)
-		printf(B" %ld %d is sleeping\n"B, time, philo->id);
+		printf(B " %ld %d is sleeping\n"B, time, philo->id);
 	else if (symbol == TAKE_FIRST_FORK)
 		printf(" %ld %d has taken a fork\n", time, philo->id);
 	else if (symbol == TAKE_SECOND_FORK)
 		printf(" %ld %d has taken a fork\n", time, philo->id);
+	else if (symbol == FREE_FIRST_FORK)
+		printf("%d has freed first fork\n", philo->id);
+	else if (symbol == FREE_SECOND_FORK)
+		printf("%d has freed first fork\n", philo->id);
 	else if (symbol == THINKING)
 		printf(" %ld %d is thinking\n", time, philo->id);
 	pthread_mutex_unlock(&philo->table->write_mutex);
 }
+   
