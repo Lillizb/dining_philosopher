@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 11:57:59 by ygao              #+#    #+#             */
-/*   Updated: 2024/11/23 13:46:59 by ygao             ###   ########.fr       */
+/*   Updated: 2024/11/23 14:02:34 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void	write_message(t_symbol	symbol, t_philo *philo)
 {
 	long		time;
 
-	time = get_microseconds() - philo->table->start_time;
+	time = (get_microseconds() - philo->table->start_time) / 1000;
 	pthread_mutex_lock(&philo->table->write_mutex);
 	if (philo->table->end_simulation == true)
 	{

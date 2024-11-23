@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/18 15:34:27 by ygao              #+#    #+#             */
-/*   Updated: 2024/11/23 13:02:13 by ygao             ###   ########.fr       */
+/*   Updated: 2024/11/23 14:32:15 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	wait_for_start(t_table *table)
 {
 	while (!read_bool(&table->mutex, &table->ready))
-		ft_usleep(1000);
+		ft_usleep(100);
 }
 
 long	get_microseconds(void)
@@ -37,7 +37,6 @@ void	ft_usleep(long time)
 	start = get_microseconds();
 	while ((get_microseconds() - start) < time)
 	{
-		usleep(100);
 		left_time = time - (get_microseconds() - start);
 		if (left_time > 1e4)
 			usleep(left_time / 2);

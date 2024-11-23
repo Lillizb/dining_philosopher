@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:52:59 by ygao              #+#    #+#             */
-/*   Updated: 2024/11/23 13:37:03 by ygao             ###   ########.fr       */
+/*   Updated: 2024/11/23 14:19:03 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ typedef struct s_philo
 	bool			eating;
 	bool			full; 
 	pthread_t		thread;
-	pthread_mutex_t	full_mutex;
 	pthread_mutex_t	mutex;
 	pthread_mutex_t	meal_mutex; 
 	t_fork			*fork;
@@ -112,7 +111,7 @@ void	join_threads(t_table *table);
 
 /*********** dining ************/
 void	*routine(void *data);
-void	think(t_philo *philo);
+void	think(t_philo *philo, bool ready_process);
 void	eat_schedule(t_philo *philo, t_table *table);
 void	eat(t_philo *philo, t_table *table);
 void	check_must_eat(t_philo *philo);

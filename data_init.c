@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:54:25 by ygao              #+#    #+#             */
-/*   Updated: 2024/11/23 12:54:09 by ygao             ###   ########.fr       */
+/*   Updated: 2024/11/23 14:30:04 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	data_init(t_table *table, int ac, char **av)
 {
-	table->philo_sum = ft_atol(av[1]);
+	table->philo_sum = (int)ft_atol(av[1]);
 	table->time_to_die = ft_atol(av[2]) * 1e3;
 	table->time_to_eat = ft_atol(av[3]) * 1e3;
 	table->time_to_sleep = ft_atol(av[4]) * 1e3;

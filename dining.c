@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:54:13 by ygao              #+#    #+#             */
-/*   Updated: 2024/11/23 13:47:08 by ygao             ###   ########.fr       */
+/*   Updated: 2024/11/23 14:34:00 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ void	*routine(void *data)
 		eat(philo, table);
 		write_message(SLEEPING, philo);
 		ft_usleep(table->time_to_sleep);
-		think(philo);
-		write_message(THINKING, philo);
+		think(philo, false);
+		
 	}
 	return (NULL);
 }
@@ -43,12 +43,12 @@ void	eat_schedule(t_philo *philo, t_table *table)
 	if (table->philo_sum % 2 == 0)
 	{
 		if (philo->id % 2 == 0)
-			ft_usleep(30000);
+			ft_usleep(1000);
 	}
 	else
 	{
 		if (philo->id % 2)
-			think(philo);
+			think(philo, true);
 	}
 }
 
@@ -69,7 +69,7 @@ void	eat(t_philo *philo, t_table *table)
 	philo->meal_counter++; 
 	philo->eating = false;
 	pthread_mutex_unlock(&philo->mutex);
-	check_must_eat(philo);
+	//check_must_eat(philo);
 }
 
 /****/ 
