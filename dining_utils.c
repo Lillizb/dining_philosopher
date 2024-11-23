@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 11:57:59 by ygao              #+#    #+#             */
-/*   Updated: 2024/11/23 11:41:26 by ygao             ###   ########.fr       */
+/*   Updated: 2024/11/23 13:46:59 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	take_fork(t_philo *philo, t_table *table)
 		return ;
 	if (table->philo_sum == 1) 
 	{
-		usleep(table->time_to_die * 1000);
+		ft_usleep(table->time_to_die);
 		printf("Philo %d died (only one fork available)\n", philo->id);
 		return ;
 	}
@@ -58,6 +58,7 @@ void	take_fork(t_philo *philo, t_table *table)
 	write_message(TAKE_FIRST_FORK, philo);
 	pthread_mutex_lock(&philo->fork[second_fork].mutex);
 	write_message(TAKE_SECOND_FORK, philo);
+	write_message(EATING, philo);
 }
 
 void	free_fork(t_philo *philo, t_table *table)
@@ -84,7 +85,6 @@ void	write_message(t_symbol	symbol, t_philo *philo)
 {
 	long		time;
 
-//the value of time is 0 by compiling
 	time = get_microseconds() - philo->table->start_time;
 	pthread_mutex_lock(&philo->table->write_mutex);
 	if (philo->table->end_simulation == true)
@@ -97,9 +97,9 @@ void	write_message(t_symbol	symbol, t_philo *philo)
 	else if (symbol == EATING && philo->table->end_simulation == false)
 		printf(G " %ld %d is eating\n"B, time, philo->id);
 	else if (symbol == SLEEPING)
-		printf(B " %ld %d is sleeping\n"B, time, philo->id);
+		printf(Y " %ld %d is sleeping\n"B, time, philo->id);
 	else if (symbol == TAKE_FIRST_FORK)
-		printf(" %ld %d has taken first fork\n", time, philo->id);
+		printf(B " %ld %d has taken first fork\n", time, philo->id);
 	else if (symbol == TAKE_SECOND_FORK)
 		printf(" %ld %d has taken second fork\n", time, philo->id);
 	else if (symbol == FREE_FIRST_FORK)
@@ -107,7 +107,7 @@ void	write_message(t_symbol	symbol, t_philo *philo)
 	else if (symbol == FREE_SECOND_FORK)
 		printf("%d has freed second fork\n", philo->id);
 	else if (symbol == THINKING)
-		printf(" %ld %d is thinking\n", time, philo->id);
+		printf(Y " %ld %d is thinking\n", time, philo->id);
 	pthread_mutex_unlock(&philo->table->write_mutex);
 }
    

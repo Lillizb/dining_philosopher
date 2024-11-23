@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 15:04:16 by ygao              #+#    #+#             */
-/*   Updated: 2024/11/23 11:31:50 by ygao             ###   ########.fr       */
+/*   Updated: 2024/11/23 13:05:53 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	*monitor(void *data)
 
 	table = (t_table *)data;
 	while (!threads_all_running(table))
-		;
+		 ;
 	while (!end_simulation(table))
 	{
 		i = -1;
@@ -55,26 +55,18 @@ void	*monitor(void *data)
 			pthread_mutex_lock(&table->philo[i].mutex);
 			time_gap_last_meal = get_microseconds() 
 					- table->philo[i].last_meal_time;
-			printf ("philo %d is eating, yes or no? %d\n", table->philo->id, table->philo->eating);
-			if (time_gap_last_meal >= table->time_to_die && !table->philo[i].eating)
+			if (!table->philo[i].eating && time_gap_last_meal >= table->time_to_die)
 			{
 				write_message(DIED, &table->philo[i]);
+				pthread_mutex_unlock(&table->philo[i].mutex);
 				pthread_mutex_lock(&table->mutex);
-				//table->philo[i].dead = 1;
 				table->end_simulation = true;
 				pthread_mutex_unlock(&table->mutex);
-			}
-			if (table->philo[i].must_eat > 0 && table->philo[i].meal_counter == table->philo[i].must_eat)
-			{
-			//	pthread_mutex_lock(&table->philo[i].mutex);
-				table->philo[i].full = true;
-				pthread_mutex_lock(&table->mutex);
-				table->full_philo++;
-				pthread_mutex_unlock(&table->mutex);
+				return (NULL);
 			}
 			pthread_mutex_unlock(&table->philo[i].mutex);
-			check_must_eat(table->philo);
 		}
+		ft_usleep(1000);
 	}
 	return (NULL);
 }

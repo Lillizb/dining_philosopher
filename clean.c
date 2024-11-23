@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 13:00:38 by ygao              #+#    #+#             */
-/*   Updated: 2024/11/18 12:12:45 by ygao             ###   ########.fr       */
+/*   Updated: 2024/11/23 13:41:18 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	free_struct(t_table *table)
 		pthread_mutex_destroy(&table->philo[i].mutex);
 		pthread_mutex_destroy(&table->philo[i].full_mutex);
 		pthread_mutex_destroy(&table->philo[i].meal_mutex);
-		pthread_mutex_destroy(&table->fork[i].mutex);
+		// pthread_mutex_destroy(&table->fork[i].mutex);
 		i++;
 	}
 	i = 0;
