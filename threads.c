@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 15:04:16 by ygao              #+#    #+#             */
-/*   Updated: 2024/11/22 13:38:11 by ygao             ###   ########.fr       */
+/*   Updated: 2024/11/23 11:31:50 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ void	create_thread(t_table *table)
 	pthread_join(table->monitor, NULL);
 }
 
-//has issue 
 void	*monitor(void *data)
 {
 	t_table	*table;
@@ -56,6 +55,7 @@ void	*monitor(void *data)
 			pthread_mutex_lock(&table->philo[i].mutex);
 			time_gap_last_meal = get_microseconds() 
 					- table->philo[i].last_meal_time;
+			printf ("philo %d is eating, yes or no? %d\n", table->philo->id, table->philo->eating);
 			if (time_gap_last_meal >= table->time_to_die && !table->philo[i].eating)
 			{
 				write_message(DIED, &table->philo[i]);
@@ -88,7 +88,7 @@ void	join_threads(t_table *table)
 	{
 		if (pthread_join(table->philo[i].thread, NULL))
 			clean_and_exit(table);
-		ft_usleep(10 * 1000);
+		ft_usleep(1000);
 	}
 	if (pthread_join(table->monitor, NULL) != 0)
 		clean_and_exit(table);

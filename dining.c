@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:54:13 by ygao              #+#    #+#             */
-/*   Updated: 2024/11/22 19:58:14 by ygao             ###   ########.fr       */
+/*   Updated: 2024/11/23 11:33:19 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,22 +57,31 @@ void	philo_eat(t_philo *philo, t_table *table)
 	take_fork(philo, table);
 	pthread_mutex_lock(&philo->mutex);
 	philo->last_meal_time = get_microseconds();
-	philo->eating = 1;
+	philo->eating = true;
 	printf("philo %d last meal time: %ld\n", philo->id, philo->last_meal_time);
 	pthread_mutex_unlock(&philo->mutex);
 	eat(philo, table);
 	free_fork(philo, table);
 	pthread_mutex_lock(&philo->mutex);
 	philo->meal_counter++; 
-	philo->eating = 0;
+	philo->eating = false;
 	pthread_mutex_unlock(&philo->mutex);
+	check_must_eat(philo);
 }
 
+/****/ 
+// void	bool_mutex_safe(t_table *mutex, void *data, bool status) //need to be checked
+// {
+// 	pthread_mutex_lock(&mutex);
+// 	data = status;
+// 	pthread_mutex_unlock(&mutex);
+// }
+/****/
 void	eat(t_philo *philo, t_table *table)
 {
 	write_message(EATING, philo);
 	ft_usleep(table->time_to_eat);
-	check_must_eat(philo);
+	// check_must_eat(philo);
 }
 
 void	check_must_eat(t_philo *philo)

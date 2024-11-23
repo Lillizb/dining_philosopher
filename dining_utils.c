@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 11:57:59 by ygao              #+#    #+#             */
-/*   Updated: 2024/11/22 20:03:01 by ygao             ###   ########.fr       */
+/*   Updated: 2024/11/23 11:41:26 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,11 +58,6 @@ void	take_fork(t_philo *philo, t_table *table)
 	write_message(TAKE_FIRST_FORK, philo);
 	pthread_mutex_lock(&philo->fork[second_fork].mutex);
 	write_message(TAKE_SECOND_FORK, philo);
-	pthread_mutex_lock(&philo->mutex);
-	philo->last_meal_time = get_microseconds();
-	philo->eating = 1;
-	printf("philo %d last meal time: %ld\n", philo->id, philo->last_meal_time);
-	pthread_mutex_unlock(&philo->mutex);
 }
 
 void	free_fork(t_philo *philo, t_table *table)
@@ -104,13 +99,13 @@ void	write_message(t_symbol	symbol, t_philo *philo)
 	else if (symbol == SLEEPING)
 		printf(B " %ld %d is sleeping\n"B, time, philo->id);
 	else if (symbol == TAKE_FIRST_FORK)
-		printf(" %ld %d has taken a fork\n", time, philo->id);
+		printf(" %ld %d has taken first fork\n", time, philo->id);
 	else if (symbol == TAKE_SECOND_FORK)
-		printf(" %ld %d has taken a fork\n", time, philo->id);
+		printf(" %ld %d has taken second fork\n", time, philo->id);
 	else if (symbol == FREE_FIRST_FORK)
 		printf("%d has freed first fork\n", philo->id);
 	else if (symbol == FREE_SECOND_FORK)
-		printf("%d has freed first fork\n", philo->id);
+		printf("%d has freed second fork\n", philo->id);
 	else if (symbol == THINKING)
 		printf(" %ld %d is thinking\n", time, philo->id);
 	pthread_mutex_unlock(&philo->table->write_mutex);
