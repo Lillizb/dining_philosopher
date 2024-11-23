@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:52:59 by ygao              #+#    #+#             */
-/*   Updated: 2024/11/21 16:36:39 by ygao             ###   ########.fr       */
+/*   Updated: 2024/11/22 11:51:52 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ void	join_threads(t_table *table);
 
 /*********** dining ************/
 void	*routine(void *data);
-void	think(t_philo *philo, t_table *table);
+void	think(t_philo *philo);
 void	eat_schedule(t_philo *philo, t_table *table);
 void	philo_eat(t_philo *philo, t_table *table);
 void	eat(t_philo *philo, t_table *table);

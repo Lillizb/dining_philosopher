@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 11:57:59 by ygao              #+#    #+#             */
-/*   Updated: 2024/11/20 17:25:21 by ygao             ###   ########.fr       */
+/*   Updated: 2024/11/22 20:03:01 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,15 +46,23 @@ void	take_fork(t_philo *philo, t_table *table)
 		first_fork = second_fork;
 		second_fork = tmp;
 	}
-	pthread_mutex_lock(&philo->fork[first_fork].mutex);
-	write_message(TAKE_FIRST_FORK, philo);
 	if (read_bool(&philo->table->mutex, &philo->table->end_simulation))
-   	{
-		pthread_mutex_unlock(&philo->fork[first_fork].mutex);
+		return ;
+	if (table->philo_sum == 1) 
+	{
+		usleep(table->time_to_die * 1000);
+		printf("Philo %d died (only one fork available)\n", philo->id);
 		return ;
 	}
+	pthread_mutex_lock(&philo->fork[first_fork].mutex);
+	write_message(TAKE_FIRST_FORK, philo);
 	pthread_mutex_lock(&philo->fork[second_fork].mutex);
 	write_message(TAKE_SECOND_FORK, philo);
+	pthread_mutex_lock(&philo->mutex);
+	philo->last_meal_time = get_microseconds();
+	philo->eating = 1;
+	printf("philo %d last meal time: %ld\n", philo->id, philo->last_meal_time);
+	pthread_mutex_unlock(&philo->mutex);
 }
 
 void	free_fork(t_philo *philo, t_table *table)

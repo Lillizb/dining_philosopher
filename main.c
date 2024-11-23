@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:54:07 by ygao              #+#    #+#             */
-/*   Updated: 2024/11/21 16:41:07 by ygao             ###   ########.fr       */
+/*   Updated: 2024/11/22 13:37:53 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	*one(void *data)
 	philo->last_meal_time = get_microseconds();
 	write_message(TAKE_FIRST_FORK, philo);
 	if ((get_microseconds() - philo->last_meal_time) < table->time_to_die)
-		usleep(table->time_to_die - (get_microseconds() - philo->last_meal_time));
+		ft_usleep(table->time_to_die - (get_microseconds() - philo->last_meal_time));
 	write_message(DIED, philo);
 	return (NULL);
 }

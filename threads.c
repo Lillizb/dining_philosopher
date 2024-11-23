@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 15:04:16 by ygao              #+#    #+#             */
-/*   Updated: 2024/11/21 16:37:31 by ygao             ###   ########.fr       */
+/*   Updated: 2024/11/22 13:38:11 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ void	join_threads(t_table *table)
 	{
 		if (pthread_join(table->philo[i].thread, NULL))
 			clean_and_exit(table);
-		usleep(10 * 1000);
+		ft_usleep(10 * 1000);
 	}
 	if (pthread_join(table->monitor, NULL) != 0)
 		clean_and_exit(table);

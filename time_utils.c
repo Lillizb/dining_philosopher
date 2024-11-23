@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/18 15:34:27 by ygao              #+#    #+#             */
-/*   Updated: 2024/11/20 17:40:02 by ygao             ###   ########.fr       */
+/*   Updated: 2024/11/22 13:39:45 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	wait_for_start(t_table *table)
 {
 	while (!read_bool(&table->mutex, &table->ready))
-		usleep(1000);
+		ft_usleep(1000);
 }
 
 long	get_microseconds(void)

@@ -6,22 +6,24 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 10:05:28 by ygao              #+#    #+#             */
-/*   Updated: 2024/11/18 16:34:44 by ygao             ###   ########.fr       */
+/*   Updated: 2024/11/22 13:32:39 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	think(t_philo *philo, t_table *table)
+void	think(t_philo *philo)
 {
-	long	think_time;
+	long	t_eat;
+	long	t_sleep;
+	long	t_think;
 
-	if (table->end_simulation == false)
-		write_message(THINKING, philo);
-	if (philo->id % 2 == 0)
+	if (philo->table->philo_sum % 2 == 0)
 		return ;
-	think_time = (table->time_to_eat * 2) - table->time_to_sleep;
-	if (think_time < 0)
-		think_time = 0;
-	usleep(think_time * 1000);
+	t_eat = philo->table->time_to_eat;
+	t_sleep = philo->table->time_to_sleep;
+	t_think = t_eat * 2 - t_sleep;
+	if (t_think < 0)
+		t_think = 0;
+	ft_usleep(t_think * 0.42);
 }
