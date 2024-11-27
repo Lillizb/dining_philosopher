@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 15:04:16 by ygao              #+#    #+#             */
-/*   Updated: 2024/11/23 14:26:59 by ygao             ###   ########.fr       */
+/*   Updated: 2024/11/27 12:34:31 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,15 +28,13 @@ void	create_thread(t_table *table)
 				&routine, &table->philo[i]) != 0)
 			error_exit(ALLOC_ERR_THREAD, table);
 	}
+	if (pthread_create(&table->monitor, NULL, &monitor, table) != 0)
+		error_exit(ALLOC_ERR_THREAD, table);
 	pthread_mutex_lock(&table->mutex);
 	table->start_time = get_microseconds();
 	table->ready = true;
 	pthread_mutex_unlock(&table->mutex);
-	// pthread_mutex_lock(&table->mutex);
-	// pthread_mutex_unlock(&table->mutex);
 	printf("start time: %ld\n", table->start_time);
-	if (pthread_create(&table->monitor, NULL, &monitor, table) != 0)
-		error_exit(ALLOC_ERR_THREAD, table);
 	join_threads(table);
 	pthread_join(table->monitor, NULL);
 }
@@ -58,18 +56,24 @@ void	*monitor(void *data)
 			pthread_mutex_lock(&table->philo[i].mutex);
 			time_gap_last_meal = get_microseconds() 
 					- table->philo[i].last_meal_time;
-			if (!table->philo[i].eating && time_gap_last_meal >= table->time_to_die)
+			if (!table->philo[i].eating && (time_gap_last_meal >= table->time_to_die))
 			{
 				write_message(DIED, &table->philo[i]);
-				pthread_mutex_unlock(&table->philo[i].mutex);
+				// pthread_mutex_unlock(&table->philo[i].mutex);
 				pthread_mutex_lock(&table->mutex);
 				table->end_simulation = true;
 				pthread_mutex_unlock(&table->mutex);
-				return (NULL);
+			}
+			if (table->philo[i].meal_counter == table->philo[i].must_eat && !table->philo[i].full)
+			{
+				table->philo[i].full = true;
+				pthread_mutex_lock(&table->mutex);
+				table->full_philo++;
+				pthread_mutex_unlock(&table->mutex);
 			}
 			pthread_mutex_unlock(&table->philo[i].mutex);
 		}
-		//ft_usleep(1000);
+		//ft_usleep(5000);
 	}
 	return (NULL);
 }

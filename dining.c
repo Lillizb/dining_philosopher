@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:54:13 by ygao              #+#    #+#             */
-/*   Updated: 2024/11/23 14:34:00 by ygao             ###   ########.fr       */
+/*   Updated: 2024/11/27 12:58:33 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ void	*routine(void *data)
 		write_message(SLEEPING, philo);
 		ft_usleep(table->time_to_sleep);
 		think(philo, false);
-		
 	}
 	return (NULL);
 }
@@ -52,34 +51,41 @@ void	eat_schedule(t_philo *philo, t_table *table)
 	}
 }
 
+
 void	eat(t_philo *philo, t_table *table)
 {
-	if (table->philo_sum == 1)
+	int	first_fork;
+	int	second_fork;
+	int	tmp;
+
+	first_fork = philo->id;
+	second_fork = (philo->id + 1) % table->philo_sum;
+	if (first_fork > second_fork)
 	{
-		ft_usleep(table->time_to_die);
-		return ;
+		tmp = first_fork;
+		first_fork = second_fork;
+		second_fork = tmp;
 	}
-	take_fork(philo, table);
+	if (read_bool(&philo->table->mutex, &philo->table->end_simulation))
+		return ;
+	pthread_mutex_lock(&philo->fork[first_fork].mutex);
+	write_message(TAKE_FIRST_FORK, philo);
+	pthread_mutex_lock(&philo->fork[second_fork].mutex);
+	write_message(TAKE_SECOND_FORK, philo);
+	write_message(EATING, philo);
 	pthread_mutex_lock(&philo->mutex);
 	philo->eating = true;
+	philo->last_meal_time = get_microseconds();
+	philo->meal_counter++; 
 	pthread_mutex_unlock(&philo->mutex);
 	ft_usleep(table->time_to_eat);
-	free_fork(philo, table);
+	pthread_mutex_unlock(&philo->fork[first_fork].mutex);
+	pthread_mutex_unlock(&philo->fork[second_fork].mutex);
 	pthread_mutex_lock(&philo->mutex);
-	philo->meal_counter++; 
 	philo->eating = false;
 	pthread_mutex_unlock(&philo->mutex);
-	//check_must_eat(philo);
+	check_must_eat(philo);
 }
-
-/****/ 
-// void	bool_mutex_safe(t_table *mutex, void *data, bool status) //need to be checked
-// {
-// 	pthread_mutex_lock(&mutex);
-// 	data = status;
-// 	pthread_mutex_unlock(&mutex);
-// }
-/****/
 
 void	check_must_eat(t_philo *philo)
 {

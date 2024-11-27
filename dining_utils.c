@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 11:57:59 by ygao              #+#    #+#             */
-/*   Updated: 2024/11/23 14:02:34 by ygao             ###   ########.fr       */
+/*   Updated: 2024/11/27 12:53:32 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,54 +32,25 @@ bool	end_simulation(t_table *table)
 	return (end);
 }
 
-void	take_fork(t_philo *philo, t_table *table)
-{
-	int	first_fork;
-	int	second_fork;
-	int	tmp;
+// void	free_fork(t_philo *philo, t_table *table)
+// {
+// 	int	first_fork;
+// 	int	second_fork;
+// 	int	tmp;
 
-	first_fork = philo->id;
-	second_fork = (philo->id + 1) % table->philo_sum;
-	if (first_fork > second_fork)
-	{
-		tmp = first_fork;
-		first_fork = second_fork;
-		second_fork = tmp;
-	}
-	if (read_bool(&philo->table->mutex, &philo->table->end_simulation))
-		return ;
-	if (table->philo_sum == 1) 
-	{
-		ft_usleep(table->time_to_die);
-		printf("Philo %d died (only one fork available)\n", philo->id);
-		return ;
-	}
-	pthread_mutex_lock(&philo->fork[first_fork].mutex);
-	write_message(TAKE_FIRST_FORK, philo);
-	pthread_mutex_lock(&philo->fork[second_fork].mutex);
-	write_message(TAKE_SECOND_FORK, philo);
-	write_message(EATING, philo);
-}
-
-void	free_fork(t_philo *philo, t_table *table)
-{
-	int	first_fork;
-	int	second_fork;
-	int	tmp;
-
-	first_fork = philo->id;
-	second_fork = (philo->id + 1) % table->philo_sum;
-	if (first_fork > second_fork)
-	{
-		tmp = first_fork;
-		first_fork = second_fork;
-		second_fork = tmp;
-	}
-	pthread_mutex_unlock(&philo->fork[first_fork].mutex);
-	write_message(FREE_FIRST_FORK, philo);
-	pthread_mutex_unlock(&philo->fork[second_fork].mutex);
-	write_message(FREE_SECOND_FORK, philo);
-}
+// 	first_fork = philo->id;
+// 	second_fork = (philo->id + 1) % table->philo_sum;
+// 	if (first_fork > second_fork)
+// 	{
+// 		tmp = first_fork;
+// 		first_fork = second_fork;
+// 		second_fork = tmp;
+// 	}
+// 	pthread_mutex_unlock(&philo->fork[first_fork].mutex);
+// 	write_message(FREE_FIRST_FORK, philo);
+// 	pthread_mutex_unlock(&philo->fork[second_fork].mutex);
+// 	write_message(FREE_SECOND_FORK, philo);
+// }
 
 void	write_message(t_symbol	symbol, t_philo *philo)
 {

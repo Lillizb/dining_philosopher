@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:52:59 by ygao              #+#    #+#             */
-/*   Updated: 2024/11/23 14:19:03 by ygao             ###   ########.fr       */
+/*   Updated: 2024/11/27 12:53:40 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,14 +113,13 @@ void	join_threads(t_table *table);
 void	*routine(void *data);
 void	think(t_philo *philo, bool ready_process);
 void	eat_schedule(t_philo *philo, t_table *table);
-void	eat(t_philo *philo, t_table *table);
 void	check_must_eat(t_philo *philo);
 
 
 /******* utils *********/
 bool	read_bool(pthread_mutex_t *mutex, bool *value);
-void	take_fork(t_philo *philo, t_table *table);
-void	free_fork(t_philo *philo, t_table *table);
+void	eat(t_philo *philo, t_table *table);
+//void	free_fork(t_philo *philo, t_table *table);
 long	get_time(void);
 void	write_message(t_symbol symbol, t_philo *philo);
 long	get_microseconds(void);
