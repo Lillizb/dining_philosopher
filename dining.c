@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:54:13 by ygao              #+#    #+#             */
-/*   Updated: 2024/11/27 12:58:33 by ygao             ###   ########.fr       */
+/*   Updated: 2024/12/04 17:21:00 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ void	eat(t_philo *philo, t_table *table)
 	}
 	if (read_bool(&philo->table->mutex, &philo->table->end_simulation))
 		return ;
+	//check_must_eat(philo);
 	pthread_mutex_lock(&philo->fork[first_fork].mutex);
 	write_message(TAKE_FIRST_FORK, philo);
 	pthread_mutex_lock(&philo->fork[second_fork].mutex);
@@ -84,19 +85,18 @@ void	eat(t_philo *philo, t_table *table)
 	pthread_mutex_lock(&philo->mutex);
 	philo->eating = false;
 	pthread_mutex_unlock(&philo->mutex);
-	check_must_eat(philo);
 }
 
-void	check_must_eat(t_philo *philo)
-{
-	pthread_mutex_lock(&philo->mutex);
-	if (philo->must_eat != -1 && philo->meal_counter 
-		== philo->must_eat && philo->full == false)
-	{
-		philo->full = true;
-		philo->table->full_philo++;
-		if (philo->table->full_philo == philo->table->philo_sum)
-			philo->table->end_simulation = true;
-	}
-	pthread_mutex_unlock(&philo->mutex);
-}
+// void	check_must_eat(t_philo *philo)
+// {
+// 	pthread_mutex_lock(&philo->mutex);
+// 	if (philo->must_eat != -1 && philo->meal_counter 
+// 		== philo->must_eat && philo->full == false)
+// 	{
+// 		philo->full = true;
+// 		philo->table->full_philo++;
+// 		if (philo->table->full_philo == philo->table->philo_sum)
+// 			philo->table->end_simulation = true;
+// 	}
+// 	pthread_mutex_unlock(&philo->mutex);
+// }

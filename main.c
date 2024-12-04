@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:54:07 by ygao              #+#    #+#             */
-/*   Updated: 2024/12/02 16:08:17 by ygao             ###   ########.fr       */
+/*   Updated: 2024/12/04 17:55:00 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,30 +40,28 @@ void	*one(void *data)
 {
 	t_table	*table;
 	t_philo	*philo;
-	long	elapse;
+	// long	elapse;
 
-	philo = (t_philo *)data;
-	table = philo->table;
+	table = (t_table *)data;
+	philo = table->philo;
 	table->start_time = get_microseconds();
 	philo->last_meal_time = get_microseconds();
+	printf("get fork\n");
+	if (philo->table->end_simulation == true)
+   		return (NULL);
 	write_message(TAKE_FIRST_FORK, philo);
-	elapse = table->time_to_die - (get_microseconds() - philo->last_meal_time);
 	if ((get_microseconds() - philo->last_meal_time) < table->time_to_die)
-		ft_usleep(elapse);
+		ft_usleep(table->time_to_die - (get_microseconds() - philo->last_meal_time));
 	write_message(DIED, philo);
 	return (NULL);
 }
 
 void	one_philo(t_table *table)
 {
-	if (table->philo_sum == 1)
-	{
-		if (pthread_create(&table->philo->thread, NULL, &one, table) != 0)
-		{
-			perror("Failed to create thread for single philosopher");
-			//clean_and_exit(table);
-		}
-	}
-	pthread_join(table->philo->thread, NULL);
-	//clean_and_exit(table);
+	int	ret;
+	ret = pthread_create(&table->philo->thread, NULL, &one, table);
+	printf("thread creation result: %d \n", ret);
+	 if (pthread_create(&table->philo->thread, NULL, &one, table) != 0)
+	 	error_exit(ALLOC_ERR_THREAD, table);
+	clean_and_exit(table);
 }

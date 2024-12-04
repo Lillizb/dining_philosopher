@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 11:57:59 by ygao              #+#    #+#             */
-/*   Updated: 2024/11/27 12:53:32 by ygao             ###   ########.fr       */
+/*   Updated: 2024/12/04 17:54:19 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,4 +81,3 @@ void	write_message(t_symbol	symbol, t_philo *philo)
 		printf(Y " %ld %d is thinking\n", time, philo->id);
 	pthread_mutex_unlock(&philo->table->write_mutex);
 }
-   
