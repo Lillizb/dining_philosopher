@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:52:59 by ygao              #+#    #+#             */
-/*   Updated: 2024/11/27 12:53:40 by ygao             ###   ########.fr       */
+/*   Updated: 2024/12/05 15:32:27 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,6 @@ typedef struct s_table
 	bool			end_simulation;
 	pthread_t		monitor;
 	pthread_mutex_t	mutex;
-	//pthread_mutex_t	start;
 	pthread_mutex_t	write_mutex;
 	t_philo			*philo;
 	t_fork			*fork;
@@ -119,7 +118,6 @@ void	check_must_eat(t_philo *philo);
 /******* utils *********/
 bool	read_bool(pthread_mutex_t *mutex, bool *value);
 void	eat(t_philo *philo, t_table *table);
-//void	free_fork(t_philo *philo, t_table *table);
 long	get_time(void);
 void	write_message(t_symbol symbol, t_philo *philo);
 long	get_microseconds(void);

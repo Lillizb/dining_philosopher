@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+         #
+#    By: marvin <marvin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/21 10:53:36 by ygao              #+#    #+#              #
-#    Updated: 2024/12/04 16:28:53 by ygao             ###   ########.fr        #
+#    Updated: 2024/12/05 15:33:29 by marvin           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ CC		=	cc
 CFLAGS	=	 -Wall -Wextra -Werror -g
 
 SRC		=	 main.c dining.c parse_input.c threads.c other_actions.c \
-			 clean.c dining_utils.c dining_utils_2.c data_init.c init_utils.c time_utils.c \
+			 clean.c dining_utils.c data_init.c init_utils.c time_utils.c \
 
 OBJ		= 	$(SRC:.c=.o)
 

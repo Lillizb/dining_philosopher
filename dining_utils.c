@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dining_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 11:57:59 by ygao              #+#    #+#             */
-/*   Updated: 2024/12/04 17:54:19 by ygao             ###   ########.fr       */
+/*   Updated: 2024/12/05 15:33:11 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,26 +31,6 @@ bool	end_simulation(t_table *table)
 	pthread_mutex_unlock(&table->mutex);
 	return (end);
 }
-
-// void	free_fork(t_philo *philo, t_table *table)
-// {
-// 	int	first_fork;
-// 	int	second_fork;
-// 	int	tmp;
-
-// 	first_fork = philo->id;
-// 	second_fork = (philo->id + 1) % table->philo_sum;
-// 	if (first_fork > second_fork)
-// 	{
-// 		tmp = first_fork;
-// 		first_fork = second_fork;
-// 		second_fork = tmp;
-// 	}
-// 	pthread_mutex_unlock(&philo->fork[first_fork].mutex);
-// 	write_message(FREE_FIRST_FORK, philo);
-// 	pthread_mutex_unlock(&philo->fork[second_fork].mutex);
-// 	write_message(FREE_SECOND_FORK, philo);
-// }
 
 void	write_message(t_symbol	symbol, t_philo *philo)
 {
@@ -80,4 +60,16 @@ void	write_message(t_symbol	symbol, t_philo *philo)
 	else if (symbol == THINKING)
 		printf(Y " %ld %d is thinking\n", time, philo->id);
 	pthread_mutex_unlock(&philo->table->write_mutex);
+}
+
+bool threads_all_running(t_table *table)
+{
+    bool    running;
+
+    running = false;
+    pthread_mutex_lock(&table->mutex);
+    if (table->thread_sum == table->philo_sum)
+        running = true;
+    pthread_mutex_unlock(&table->mutex);
+    return (running);
 }

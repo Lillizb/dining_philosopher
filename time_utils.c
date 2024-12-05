@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   time_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/18 15:34:27 by ygao              #+#    #+#             */
-/*   Updated: 2024/11/27 11:56:39 by ygao             ###   ########.fr       */
+/*   Updated: 2024/12/05 15:34:16 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,17 +47,3 @@ void	ft_usleep(long time)
 		}
 	}
 }
-
-// long	get_time(void)
-// {
-// 	struct timeval	tv;
-// 	long			start;
-
-// 	if (gettimeofday(&tv, NULL) != 0)
-// 	{
-// 		printf("Time of Day: Errpr!\n");
-// 		return (-1);
-// 	}
-// 	start = tv.tv_sec * 1e3 + tv.tv_usec / 1e3;
-// 	return (start);
-// }

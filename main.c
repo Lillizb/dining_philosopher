@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:54:07 by ygao              #+#    #+#             */
-/*   Updated: 2024/12/04 17:55:00 by ygao             ###   ########.fr       */
+/*   Updated: 2024/12/05 15:10:30 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,18 +40,20 @@ void	*one(void *data)
 {
 	t_table	*table;
 	t_philo	*philo;
-	// long	elapse;
+	long	elapse;
 
+	elapse = 0;
 	table = (t_table *)data;
 	philo = table->philo;
-	table->start_time = get_microseconds();
 	philo->last_meal_time = get_microseconds();
-	printf("get fork\n");
 	if (philo->table->end_simulation == true)
    		return (NULL);
 	write_message(TAKE_FIRST_FORK, philo);
-	if ((get_microseconds() - philo->last_meal_time) < table->time_to_die)
-		ft_usleep(table->time_to_die - (get_microseconds() - philo->last_meal_time));
+	if (elapse > 0)
+	{
+		elapse = table->time_to_die - (get_microseconds() - philo->last_meal_time);
+		ft_usleep(elapse);
+	}
 	write_message(DIED, philo);
 	return (NULL);
 }

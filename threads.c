@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   threads.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 15:04:16 by ygao              #+#    #+#             */
-/*   Updated: 2024/12/04 17:22:35 by ygao             ###   ########.fr       */
+/*   Updated: 2024/12/05 15:32:15 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,6 @@ void	*monitor(void *data)
 			if (!table->philo[i].eating && (time_gap_last_meal > table->time_to_die))
 			{
 				write_message(DIED, &table->philo[i]);
-				// pthread_mutex_unlock(&table->philo[i].mutex);
 				pthread_mutex_lock(&table->mutex);
 				table->end_simulation = true;
 				pthread_mutex_unlock(&table->mutex);
@@ -70,14 +69,14 @@ void	*monitor(void *data)
 			if (table->philo[i].meal_counter == table->philo[i].must_eat && !table->philo[i].full)
 			{
 				table->philo[i].full = true;
-				table->end_simulation = true;
 				pthread_mutex_lock(&table->mutex);
 				table->full_philo++;
+				if (table->full_philo == table->philo_sum)
+					table->end_simulation = true;
 				pthread_mutex_unlock(&table->mutex);
 			}
 			pthread_mutex_unlock(&table->philo[i].mutex);
 		}
-		//ft_usleep(5000);
 	}
 	return (NULL);
 }
@@ -91,7 +90,6 @@ void	join_threads(t_table *table)
 	{
 		if (pthread_join(table->philo[i].thread, NULL))
 			clean_and_exit(table);
-		//ft_usleep(1000);
 	}
 	if (pthread_join(table->monitor, NULL) != 0)
 		clean_and_exit(table);
