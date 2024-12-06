@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   clean.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 13:00:38 by ygao              #+#    #+#             */
-/*   Updated: 2024/12/05 15:34:49 by marvin           ###   ########.fr       */
+/*   Updated: 2024/12/06 17:36:59 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ void	free_struct(t_table *table)
 	while (i < table->philo_sum)
 	{
 		pthread_mutex_destroy(&table->philo[i].mutex);
-		pthread_mutex_destroy(&table->philo[i].meal_mutex);
 		i++;
 	}
 	i = 0;

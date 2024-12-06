@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dining.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:54:13 by ygao              #+#    #+#             */
-/*   Updated: 2024/12/05 15:32:43 by marvin           ###   ########.fr       */
+/*   Updated: 2024/12/06 17:37:48 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ void	eat_schedule(t_philo *philo, t_table *table)
 			think(philo, true);
 	}
 }
-
 
 void	eat(t_philo *philo, t_table *table)
 {

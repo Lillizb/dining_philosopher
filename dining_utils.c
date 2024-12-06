@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dining_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 11:57:59 by ygao              #+#    #+#             */
-/*   Updated: 2024/12/05 15:33:11 by marvin           ###   ########.fr       */
+/*   Updated: 2024/12/06 17:37:41 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,23 +53,19 @@ void	write_message(t_symbol	symbol, t_philo *philo)
 		printf(B " %ld %d has taken first fork\n", time, philo->id);
 	else if (symbol == TAKE_SECOND_FORK)
 		printf(" %ld %d has taken second fork\n", time, philo->id);
-	else if (symbol == FREE_FIRST_FORK)
-		printf("%d has freed first fork\n", philo->id);
-	else if (symbol == FREE_SECOND_FORK)
-		printf("%d has freed second fork\n", philo->id);
 	else if (symbol == THINKING)
 		printf(Y " %ld %d is thinking\n", time, philo->id);
 	pthread_mutex_unlock(&philo->table->write_mutex);
 }
 
-bool threads_all_running(t_table *table)
+bool	threads_all_running(t_table *table)
 {
-    bool    running;
+	bool	running;
 
-    running = false;
-    pthread_mutex_lock(&table->mutex);
-    if (table->thread_sum == table->philo_sum)
-        running = true;
-    pthread_mutex_unlock(&table->mutex);
-    return (running);
+	running = false;
+	pthread_mutex_lock(&table->mutex);
+	if (table->thread_sum == table->philo_sum)
+		running = true;
+	pthread_mutex_unlock(&table->mutex);
+	return (running);
 }

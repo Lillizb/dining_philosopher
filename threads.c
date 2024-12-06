@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   threads.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 15:04:16 by ygao              #+#    #+#             */
-/*   Updated: 2024/12/05 15:32:15 by marvin           ###   ########.fr       */
+/*   Updated: 2024/12/06 17:22:10 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	create_thread(t_table *table)   
+void	create_thread(t_table *table)
 {
 	int	i;
 
@@ -26,7 +26,6 @@ void	create_thread(t_table *table)
 	}
 	while (++i < table->philo_sum)
 	{
-		printf("Creating thread %d\n", i);
 		if (pthread_create(&table->philo[i].thread, NULL, 
 				&routine, &table->philo[i]) != 0)
 			error_exit(ALLOC_ERR_THREAD, table);
@@ -37,7 +36,6 @@ void	create_thread(t_table *table)
 	table->start_time = get_microseconds();
 	table->ready = true;
 	pthread_mutex_unlock(&table->mutex);
-	printf("start time: %ld\n", table->start_time);
 	join_threads(table);
 	pthread_join(table->monitor, NULL);
 }
@@ -58,15 +56,17 @@ void	*monitor(void *data)
 		{
 			pthread_mutex_lock(&table->philo[i].mutex);
 			time_gap_last_meal = get_microseconds() 
-					- table->philo[i].last_meal_time;
-			if (!table->philo[i].eating && (time_gap_last_meal > table->time_to_die))
+				- table->philo[i].last_meal_time;
+			if (!table->philo[i].eating && (time_gap_last_meal 
+					> table->time_to_die))
 			{
 				write_message(DIED, &table->philo[i]);
 				pthread_mutex_lock(&table->mutex);
 				table->end_simulation = true;
 				pthread_mutex_unlock(&table->mutex);
 			}
-			if (table->philo[i].meal_counter == table->philo[i].must_eat && !table->philo[i].full)
+			if (table->philo[i].meal_counter == table->philo[i].must_eat 
+				&& !table->philo[i].full)
 			{
 				table->philo[i].full = true;
 				pthread_mutex_lock(&table->mutex);

@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:53:52 by ygao              #+#    #+#             */
-/*   Updated: 2024/10/21 10:25:21 by ygao             ###   ########.fr       */
+/*   Updated: 2024/12/06 17:18:41 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ void	input_valid_check(char *str)
 	int	len;
 
 	len = 0;
-
 	if (is_digit(str) == -1)
 		printf("The input is not digit");
 	while (str[len] != '\0')

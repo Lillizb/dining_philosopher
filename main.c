@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:54:07 by ygao              #+#    #+#             */
-/*   Updated: 2024/12/05 15:10:30 by marvin           ###   ########.fr       */
+/*   Updated: 2024/12/06 17:45:17 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,30 +40,24 @@ void	*one(void *data)
 {
 	t_table	*table;
 	t_philo	*philo;
-	long	elapse;
 
-	elapse = 0;
 	table = (t_table *)data;
 	philo = table->philo;
 	philo->last_meal_time = get_microseconds();
-	if (philo->table->end_simulation == true)
-   		return (NULL);
 	write_message(TAKE_FIRST_FORK, philo);
-	if (elapse > 0)
-	{
-		elapse = table->time_to_die - (get_microseconds() - philo->last_meal_time);
-		ft_usleep(elapse);
-	}
+	if (table->time_to_die - (get_microseconds() 
+			- philo->last_meal_time) > 0)
+		ft_usleep(table->time_to_die - (get_microseconds() 
+				- philo->last_meal_time));
 	write_message(DIED, philo);
 	return (NULL);
 }
 
 void	one_philo(t_table *table)
 {
-	int	ret;
-	ret = pthread_create(&table->philo->thread, NULL, &one, table);
-	printf("thread creation result: %d \n", ret);
-	 if (pthread_create(&table->philo->thread, NULL, &one, table) != 0)
-	 	error_exit(ALLOC_ERR_THREAD, table);
+	if (pthread_create(&table->philo->thread, NULL, &one, table) != 0)
+		error_exit(ALLOC_ERR_THREAD, table);
+	if (pthread_join(table->philo->thread, NULL) != 0)
+		error_exit(ALLOC_JOIN_THREAD, table);
 	clean_and_exit(table);
 }

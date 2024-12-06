@@ -3,37 +3,39 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:52:59 by ygao              #+#    #+#             */
-/*   Updated: 2024/12/05 15:32:27 by marvin           ###   ########.fr       */
+/*   Updated: 2024/12/06 17:45:00 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# ifndef PHILO_H
+#ifndef PHILO_H
 # define PHILO_H
 
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include <pthread.h>
-#include <sys/time.h> //get time of day
-#include <limits.h> //INT_MAX
+# include <unistd.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <stdbool.h>
+# include <pthread.h>
+# include <sys/time.h> //get time of day
+# include <limits.h> //INT_MAX
 
-#define RESET "\033[0m" //reset to default color
-#define R "\033[31m" //red
-#define G "\033[32m" //green
-#define Y "\033[33m"	 //yellow
-#define B "\033[34m" //blue
+# define RESET "\033[0m" //reset to default color
+# define R "\033[31m" //red
+# define G "\033[32m" //green
+# define Y "\033[33m"	 //yellow
+# define B "\033[34m" //blue
 
 //THREAD ERROR
-#define MUTEX_ERR "ERROR WITH CREATING MUTEX!\n"
-#define ALLOC_ERR_PHILO	"ERROR WITH ALLOCATING PHILO MEMORY!\n"
-#define ALLOC_ERR_FORK	"ERROR WITH ALLOCATING FORK MEMORY!\n"
-#define ALLOC_ERR_THREAD "ERROR WITH ALLOCATING THREAD MEMORY!\n"
-#define ALLOC_TABLE_ERR "ERROR WITH ALLOCATING TABLE MEMORY!\n"
-#define MEMORY_ALLOCATION_ERROR "MEMORY ALLOCATION ERROR\n"
+# define MUTEX_ERR "ERROR WITH CREATING MUTEX!\n"
+# define ALLOC_ERR_PHILO	"ERROR WITH ALLOCATING PHILO MEMORY!\n"
+# define ALLOC_ERR_FORK	"ERROR WITH ALLOCATING FORK MEMORY!\n"
+# define ALLOC_ERR_THREAD "ERROR WITH ALLOCATING THREAD MEMORY!\n"
+# define ALLOC_JOIN_THREAD "ERROR WITH JOIN THREAD MEMORY!\n"
+# define ALLOC_TABLE_ERR "ERROR WITH ALLOCATING TABLE MEMORY!\n"
+# define MEMORY_ALLOCATION_ERROR "MEMORY ALLOCATION ERROR\n"
+
 typedef struct s_table	t_table;
 
 typedef struct s_fork
@@ -52,7 +54,6 @@ typedef struct s_philo
 	bool			full; 
 	pthread_t		thread;
 	pthread_mutex_t	mutex;
-	pthread_mutex_t	meal_mutex; 
 	t_fork			*fork;
 	t_table			*table;
 }	t_philo;
@@ -83,8 +84,6 @@ typedef enum e_symbol
 	SLEEPING,
 	TAKE_FIRST_FORK,
 	TAKE_SECOND_FORK,
-	FREE_FIRST_FORK,
-	FREE_SECOND_FORK,
 	DIED,
 }	t_symbol;
 
@@ -97,8 +96,6 @@ void	*one(void *data);
 void	parse_input(int ac, char **av);
 int		check_ac(int ac);
 void	input_valid_check(char *str);
-
-
 
 /******** data init ********/
 void	data_init(t_table *table, int ac, char **av);
@@ -113,7 +110,6 @@ void	*routine(void *data);
 void	think(t_philo *philo, bool ready_process);
 void	eat_schedule(t_philo *philo, t_table *table);
 void	check_must_eat(t_philo *philo);
-
 
 /******* utils *********/
 bool	read_bool(pthread_mutex_t *mutex, bool *value);
@@ -133,6 +129,6 @@ int		is_space(char c);
 void	ft_usleep(long time);
 void	wait_for_start(t_table *table);
 bool	end_simulation(t_table *table);
-bool threads_all_running(t_table *table);
+bool	threads_all_running(t_table *table);
 
 #endif
