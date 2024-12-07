@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 11:57:59 by ygao              #+#    #+#             */
-/*   Updated: 2024/12/06 17:37:41 by ygao             ###   ########.fr       */
+/*   Updated: 2024/12/07 15:07:49 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,24 +35,26 @@ bool	end_simulation(t_table *table)
 void	write_message(t_symbol	symbol, t_philo *philo)
 {
 	long		time;
+	bool		end;
 
+	end = read_bool(&philo->table->mutex, &philo->table->end_simulation);
 	time = (get_microseconds() - philo->table->start_time) / 1000;
 	pthread_mutex_lock(&philo->table->write_mutex);
-	if (philo->table->end_simulation == true)
+	if (end)
 	{
 		pthread_mutex_unlock(&philo->table->write_mutex);
 		return ;
 	}
 	if (symbol == DIED)
 		printf(R " %ld %d died\n"B, time, philo->id);
-	else if (symbol == EATING && philo->table->end_simulation == false)
+	else if (symbol == EATING)
 		printf(G " %ld %d is eating\n"B, time, philo->id);
 	else if (symbol == SLEEPING)
 		printf(Y " %ld %d is sleeping\n"B, time, philo->id);
 	else if (symbol == TAKE_FIRST_FORK)
-		printf(B " %ld %d has taken first fork\n", time, philo->id);
+		printf(B " %ld %d has taken a fork\n", time, philo->id);
 	else if (symbol == TAKE_SECOND_FORK)
-		printf(" %ld %d has taken second fork\n", time, philo->id);
+		printf(" %ld %d has taken a fork\n", time, philo->id);
 	else if (symbol == THINKING)
 		printf(Y " %ld %d is thinking\n", time, philo->id);
 	pthread_mutex_unlock(&philo->table->write_mutex);

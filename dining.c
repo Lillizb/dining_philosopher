@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:54:13 by ygao              #+#    #+#             */
-/*   Updated: 2024/12/06 17:37:48 by ygao             ###   ########.fr       */
+/*   Updated: 2024/12/07 15:00:57 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	eat_schedule(t_philo *philo, t_table *table)
 	else
 	{
 		if (philo->id % 2)
-			think(philo, true);
+			ft_usleep(500);
 	}
 }
 
@@ -55,17 +55,12 @@ void	eat(t_philo *philo, t_table *table)
 {
 	int	first_fork;
 	int	second_fork;
-	int	tmp;
 
-	first_fork = philo->id;
-	second_fork = (philo->id + 1) % table->philo_sum;
-	if (first_fork > second_fork)
-	{
-		tmp = first_fork;
-		first_fork = second_fork;
-		second_fork = tmp;
-	}
-	if (read_bool(&philo->table->mutex, &philo->table->end_simulation))
+	first_fork = philo->id -1;
+	second_fork = philo->id % table->philo_sum;
+	switch_fork(first_fork, second_fork);
+	if (read_bool(&philo->table->mutex, 
+			&philo->table->end_simulation))
 		return ;
 	pthread_mutex_lock(&philo->fork[first_fork].mutex);
 	write_message(TAKE_FIRST_FORK, philo);
@@ -83,4 +78,16 @@ void	eat(t_philo *philo, t_table *table)
 	pthread_mutex_lock(&philo->mutex);
 	philo->eating = false;
 	pthread_mutex_unlock(&philo->mutex);
+}
+
+void	switch_fork(int first_fork, int second_fork)
+{
+	int	tmp;
+
+	if (first_fork > second_fork)
+	{
+		tmp = first_fork;
+		first_fork = second_fork;
+		second_fork = tmp;
+	}
 }

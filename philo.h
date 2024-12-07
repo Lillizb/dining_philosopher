@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:52:59 by ygao              #+#    #+#             */
-/*   Updated: 2024/12/06 17:45:00 by ygao             ###   ########.fr       */
+/*   Updated: 2024/12/07 15:24:10 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,17 +99,21 @@ void	input_valid_check(char *str);
 
 /******** data init ********/
 void	data_init(t_table *table, int ac, char **av);
+void	data_init_util(t_table *table, char **av);
+void	data_init_ii(t_table *table);
 void	fork_init(t_table *table);
 void	philo_init(t_table *table);
 void	create_thread(t_table *table);
 void	*monitor(void *data);
+void	set_bool(pthread_mutex_t *mutex, bool *flag, bool value);
+void	check_philos(t_table *table);
 void	join_threads(t_table *table);
 
 /*********** dining ************/
 void	*routine(void *data);
 void	think(t_philo *philo, bool ready_process);
 void	eat_schedule(t_philo *philo, t_table *table);
-void	check_must_eat(t_philo *philo);
+void	switch_fork(int first_fork, int second_fork);
 
 /******* utils *********/
 bool	read_bool(pthread_mutex_t *mutex, bool *value);

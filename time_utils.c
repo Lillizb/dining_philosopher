@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/18 15:34:27 by ygao              #+#    #+#             */
-/*   Updated: 2024/12/06 17:21:21 by ygao             ###   ########.fr       */
+/*   Updated: 2024/12/07 15:06:47 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,6 @@ void	ft_usleep(long time)
 		if (left_time > 1e4)
 			usleep(left_time / 2);
 		else
-		{
-			while ((get_microseconds() - start) < time)
-				;
-		}
+			usleep(100);
 	}
 }

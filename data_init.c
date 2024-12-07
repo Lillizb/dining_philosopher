@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:54:25 by ygao              #+#    #+#             */
-/*   Updated: 2024/12/06 17:47:14 by ygao             ###   ########.fr       */
+/*   Updated: 2024/12/07 15:24:36 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,7 @@
 
 void	data_init(t_table *table, int ac, char **av)
 {
-	table->philo_sum = (int)ft_atol(av[1]);
-	table->time_to_die = ft_atol(av[2]) * 1000;
-	table->time_to_eat = ft_atol(av[3]) * 1000;
-	table->time_to_sleep = ft_atol(av[4]) * 1000;
+	data_init_util(table, av);
 	table->fork_sum = table->philo_sum;
 	table->philo = malloc(sizeof(t_philo) * table->philo_sum);
 	if (!table->philo)
@@ -31,11 +28,8 @@ void	data_init(t_table *table, int ac, char **av)
 	table->thread_sum = 0;
 	table->ready = false;
 	table->full_philo = 0;
-	printf("Philosophers: %ld\n", table->philo_sum);
-	printf("Time to die: %ld\n", table->time_to_die);
-	table->end_simulation = false;
-	table->start_time = 0;
-	table->philo->must_eat = -1;
+	usleep(1000);
+	data_init_ii(table);
 	if (ac == 6)
 		table->philo->must_eat = ft_atol(av[5]);
 	if (pthread_mutex_init(&table->mutex, NULL) != 0)
@@ -44,6 +38,21 @@ void	data_init(t_table *table, int ac, char **av)
 		error_exit(MUTEX_ERR, table);
 	philo_init(table);
 	fork_init(table);
+}
+
+void	data_init_util(t_table *table, char **av)
+{
+	table->philo_sum = (int)ft_atol(av[1]);
+	table->time_to_die = ft_atol(av[2]) * 1000;
+	table->time_to_eat = ft_atol(av[3]) * 1000;
+	table->time_to_sleep = ft_atol(av[4]) * 1000;
+}
+
+void	data_init_ii(t_table *table)
+{
+	table->end_simulation = false;
+	table->start_time = 0;
+	table->philo->must_eat = -1;
 }
 
 void	philo_init(t_table *table)
