@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 13:00:38 by ygao              #+#    #+#             */
-/*   Updated: 2024/12/06 17:36:59 by ygao             ###   ########.fr       */
+/*   Updated: 2024/12/09 14:55:19 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,7 @@ int	error_exit(char *error, t_table *table)
 {
 	printf("%s\n", error);
 	if (table)
-	{
-		printf("erro_print 65/n");
 		ft_exit(table);
-	}
 	return (-1);
 }
 

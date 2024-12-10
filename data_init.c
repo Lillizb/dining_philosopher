@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:54:25 by ygao              #+#    #+#             */
-/*   Updated: 2024/12/07 15:24:36 by ygao             ###   ########.fr       */
+/*   Updated: 2024/12/09 16:30:38 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,8 @@ void	philo_init(t_table *table)
 		table->philo[i].id = i + 1;
 		table->philo[i].dead = 0;
 		table->philo[i].meal_counter = 0;
-		table->philo[i].must_eat = table->philo->must_eat;
+		if (table->philo->must_eat != -1)
+			table->philo[i].must_eat = table->philo->must_eat;
 		table->philo[i].eating = false;
 		table->philo[i].full = false;
 		table->philo[i].last_meal_time = 0;

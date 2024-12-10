@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:52:59 by ygao              #+#    #+#             */
-/*   Updated: 2024/12/07 15:24:10 by ygao             ###   ########.fr       */
+/*   Updated: 2024/12/09 15:28:24 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ typedef struct s_philo
 	bool			full; 
 	pthread_t		thread;
 	pthread_mutex_t	mutex;
+	pthread_mutex_t	meal_mutex; 
 	t_fork			*fork;
 	t_table			*table;
 }	t_philo;
@@ -84,6 +85,8 @@ typedef enum e_symbol
 	SLEEPING,
 	TAKE_FIRST_FORK,
 	TAKE_SECOND_FORK,
+	FREE_FIRST_FORK,
+	FREE_SECOND_FORK,
 	DIED,
 }	t_symbol;
 
@@ -95,25 +98,21 @@ void	*one(void *data);
 /****** parsing input ******/
 void	parse_input(int ac, char **av);
 int		check_ac(int ac);
-void	input_valid_check(char *str);
+int		input_valid_check(char *str);
 
 /******** data init ********/
 void	data_init(t_table *table, int ac, char **av);
-void	data_init_util(t_table *table, char **av);
-void	data_init_ii(t_table *table);
 void	fork_init(t_table *table);
 void	philo_init(t_table *table);
 void	create_thread(t_table *table);
 void	*monitor(void *data);
-void	set_bool(pthread_mutex_t *mutex, bool *flag, bool value);
-void	check_philos(t_table *table);
 void	join_threads(t_table *table);
 
 /*********** dining ************/
 void	*routine(void *data);
 void	think(t_philo *philo, bool ready_process);
 void	eat_schedule(t_philo *philo, t_table *table);
-void	switch_fork(int first_fork, int second_fork);
+void	check_must_eat(t_philo *philo);
 
 /******* utils *********/
 bool	read_bool(pthread_mutex_t *mutex, bool *value);
@@ -134,5 +133,10 @@ void	ft_usleep(long time);
 void	wait_for_start(t_table *table);
 bool	end_simulation(t_table *table);
 bool	threads_all_running(t_table *table);
+void	data_init_util(t_table *table, char **av);
+void	data_init_ii(t_table *table);
+void	switch_fork(int first_fork, int second_fork);
+void	set_bool(pthread_mutex_t *mutex, bool *flag, bool value);
+void	check_philosopher_full(t_table *table, int i);
 
 #endif

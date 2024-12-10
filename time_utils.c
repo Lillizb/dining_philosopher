@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/18 15:34:27 by ygao              #+#    #+#             */
-/*   Updated: 2024/12/07 15:06:47 by ygao             ###   ########.fr       */
+/*   Updated: 2024/12/09 16:33:46 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,16 @@ void	ft_usleep(long time)
 		if (left_time > 1e4)
 			usleep(left_time / 2);
 		else
-			usleep(100);
+		{
+			while ((get_microseconds() - start) < time)
+				;
+		}
 	}
+}
+
+void	set_bool(pthread_mutex_t *mutex, bool *flag, bool value)
+{
+	pthread_mutex_lock(mutex);
+	*flag = value;
+	pthread_mutex_unlock(mutex);
 }

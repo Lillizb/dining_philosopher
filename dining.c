@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:54:13 by ygao              #+#    #+#             */
-/*   Updated: 2024/12/09 12:57:26 by ygao             ###   ########.fr       */
+/*   Updated: 2024/12/09 16:30:49 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,12 +42,12 @@ void	eat_schedule(t_philo *philo, t_table *table)
 	if (table->philo_sum % 2 == 0)
 	{
 		if (philo->id % 2 == 0)
-			ft_usleep(500);
+			ft_usleep(1000);
 	}
 	else
 	{
 		if (philo->id % 2)
-			ft_usleep(250);
+			think(philo, true);
 	}
 }
 

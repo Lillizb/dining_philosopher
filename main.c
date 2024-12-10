@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:54:07 by ygao              #+#    #+#             */
-/*   Updated: 2024/12/06 17:45:17 by ygao             ###   ########.fr       */
+/*   Updated: 2024/12/10 13:39:51 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,13 +43,11 @@ void	*one(void *data)
 
 	table = (t_table *)data;
 	philo = table->philo;
-	philo->last_meal_time = get_microseconds();
-	write_message(TAKE_FIRST_FORK, philo);
-	if (table->time_to_die - (get_microseconds() 
-			- philo->last_meal_time) > 0)
-		ft_usleep(table->time_to_die - (get_microseconds() 
-				- philo->last_meal_time));
-	write_message(DIED, philo);
+	if (philo->table->end_simulation == true)
+		return (NULL);
+	printf(B "%ld 1 has taken a fork\n", table->start_time);
+	ft_usleep(table->time_to_die);
+	printf(R "%ld 1 died\n"B, table->time_to_die / 1000);
 	return (NULL);
 }
 

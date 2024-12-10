@@ -6,7 +6,7 @@
 /*   By: ygao <ygao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:53:52 by ygao              #+#    #+#             */
-/*   Updated: 2024/12/06 17:18:41 by ygao             ###   ########.fr       */
+/*   Updated: 2024/12/09 16:07:25 by ygao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,35 +14,41 @@
 
 void	parse_input(int ac, char **av)
 {
-	input_valid_check(av[1]);
-	input_valid_check(av[2]);
-	input_valid_check(av[3]);
-	input_valid_check(av[4]);
-	if (ac == 6)
-		input_valid_check(av[5]);
+	int	i;
+
+	i = 1;
+	if ((check_ac(ac)) == -1)
+		exit(EXIT_FAILURE);
+	while (i < ac)
+	{
+		if (input_valid_check(av[i]) == -1)
+		{
+			printf("Error: Invalid input for argument %d: %s\n", i, av[i]);
+			exit(EXIT_FAILURE);
+		}
+		i++;
+	}
 }
 
 int	check_ac(int ac)
 {
 	if (ac < 5 || ac > 6)
-	{
-		printf("argument input not correct! \n");
 		return (-1);
-	}
 	return (0);
 }
 
-void	input_valid_check(char *str)
+int	input_valid_check(char *str)
 {
 	int	len;
 
 	len = 0;
 	if (is_digit(str) == -1)
-		printf("The input is not digit");
+		return (-1);
 	while (str[len] != '\0')
 		len++;
 	if (len > 10)
-		printf("The input is illegal");
+		return (-1);
+	return (0);
 }
 
 int	is_digit(char *s)
@@ -52,13 +58,15 @@ int	is_digit(char *s)
 	i = 0;
 	while (s[i] != '\0')
 	{
-		if (s[i] == '-' || s[i] == '+')
-			i++;
+		if (s[i] == '-')
+			return (-1);
 		if (s[i] == '\0')
 			return (-1);
+		if (s[i] == '+')
+			i++;
 		while (s[i] != '\0')
 		{
-			if (s[i] < '0' && s[i] > '9')
+			if (s[i] < '0' || s[i] > '9')
 				return (-1);
 			i++;
 		}
